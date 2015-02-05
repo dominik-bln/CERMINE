@@ -3,6 +3,7 @@
 *.war
 *.ear
 *.class
+*.log
 
 #vim specific
 *~
@@ -34,3 +35,6 @@ cermine-impl/*.xml
 
 #webapp logs
 cermine-web/catalina.base*
+
+# Vagrant
+.vagrant
