@@ -37,26 +37,7 @@ import pl.edu.icm.cermine.exception.AnalysisException;
  */
 public class CermineExtractorServiceImplTest {
 
-    Logger log = LoggerFactory.getLogger(CermineExtractorServiceImplTest.class);
-
-    public CermineExtractorServiceImplTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
+    private Logger log = LoggerFactory.getLogger(CermineExtractorServiceImplTest.class);
 
     /**
      * Test of extractNLM method, of class CermineExtractorServiceImpl.
@@ -71,7 +52,6 @@ public class CermineExtractorServiceImplTest {
         ExtractionResult result = instance.extractNLM(is);
         assertNotNull(result);
         assertTrue(result.isSucceeded());
-
     }
 
     /**
@@ -80,9 +60,7 @@ public class CermineExtractorServiceImplTest {
     @Test
     public void testQueue() throws Exception {
         System.out.println("Queue overflow");
-        final CermineExtractorServiceImpl instance = new CermineExtractorServiceImpl();
-        instance.setThreadPoolSize(1);
-        instance.setMaxQueueForBatch(1);
+        final CermineExtractorServiceImpl instance = new CermineExtractorServiceImpl(1, 1);
         instance.init();
         final Map<Integer, Boolean> succ = new HashMap<Integer, Boolean>();
 
@@ -133,8 +111,7 @@ public class CermineExtractorServiceImplTest {
     @Test
     public void testObtainExtractor() throws Exception {
         System.out.println("obtainExtractor");
-        final CermineExtractorServiceImpl instance = new CermineExtractorServiceImpl();
-        instance.setThreadPoolSize(3);
+        final CermineExtractorServiceImpl instance = new CermineExtractorServiceImpl(3, 0);
         instance.init();
         List<PdfNLMContentExtractor> list = new ArrayList<PdfNLMContentExtractor>();
         for (int i = 0; i < 3; i++) {

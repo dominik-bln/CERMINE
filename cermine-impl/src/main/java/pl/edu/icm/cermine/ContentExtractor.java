@@ -216,15 +216,30 @@ public class ContentExtractor {
             
             Element back = new Element("back");
             Element refList = new Element("ref-list");
-            for (Element ref : nlmReferences) {
-                Element r = new Element("ref");
-                r.addContent(ref);
-                refList.addContent(r);
-            }
+            this.addRefElements(refList, nlmReferences.toArray(new Element[0]));
+            
             back.addContent(refList);
             nlmContent.addContent(back);
         }
         return nlmContent;
+    }
+    
+    /**
+     * Takes the given array of references and adds them to the given list element.
+     * @param refList
+     * @param references 
+     * 
+     * @todo remove code duplication between ContentExtractor and PdfNlmContentExtractor
+     */
+    private void addRefElements(Element refList, Element[] references) {
+        int index = 1;
+        for (Element ref : references) {
+            Element r = new Element("ref");
+            r.setAttribute("id", "R" + index);
+            r.addContent(ref);
+            refList.addContent(r);
+            index++;
+        }
     }
     
     /**

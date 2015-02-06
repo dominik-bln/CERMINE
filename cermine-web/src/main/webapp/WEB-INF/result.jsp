@@ -15,12 +15,15 @@
 <h2>Extraction results</h2>
 
 <div id="tabs">
+  
     <ul>
         <li><a href="#tabs-meta">Metadata</a></li>
-        <li><a href="#tabs-refs">References</a></li>
+        <li><a href="#tabs-in-text-refs">In-Text References</a></li>
+        <li><a href="#tabs-refs">End References</a></li>
         <li><a href="#tabs-text">Full text</a></li>
         <li><a href="#tabs-nlm">NLM</a></li>
     </ul>
+  
     <div id="tabs-meta">
         <p>Extracted metadata formatted in HTML form. Please see NLM for full extraction results.</p>
         <br/>
@@ -54,6 +57,14 @@
             <tr><th>Accepted&nbsp;date:</th><td>${meta.acceptedDate}</td></tr>
         </table>
     </div>
+        
+    <div id="tabs-in-text-refs">
+        <p>In-text references formatted in HTML form. <!-- Please see NLM for full extraction result -->.</p>
+        <br/><br/>
+        ${inTextReferences}
+        </ol>
+    </div>
+        
     <div id="tabs-refs">
         <p>Bibliographic references formatted in HTML form. Please see NLM for full extraction result.</p>
         <br/><br/>
@@ -92,10 +103,12 @@
         </c:forEach>
         </ol>
     </div>
+        
     <div id="tabs-text">
         <p>Full text formatted in HTML form. Please see NLM for full extraction result.</p>
         ${html}
     </div>
+    
     <div id="tabs-nlm">
         <p>Result as an NLM XML record <a href="download.html?type=nlm&task=${task.id}"> (download)</a>:</p>
         <pre class="brush: xml;">${nlm}</pre>

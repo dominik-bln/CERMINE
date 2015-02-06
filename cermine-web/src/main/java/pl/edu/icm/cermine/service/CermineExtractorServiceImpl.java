@@ -44,18 +44,24 @@ import pl.edu.icm.cermine.exception.AnalysisException;
 @Component
 public class CermineExtractorServiceImpl implements CermineExtractorService {
 
-    int threadPoolSize = 4;
-    int maxQueueForBatch = 0;
-    Logger log = LoggerFactory.getLogger(CermineExtractorServiceImpl.class);
-    List<PdfNLMContentExtractor> extractors;
-    ExecutorService processingExecutor;
-    ExecutorService batchProcessingExecutor;
+    private final int threadPoolSize;
+    private final int maxQueueForBatch;
+    private final Logger log = LoggerFactory.getLogger(CermineExtractorServiceImpl.class);
+    private List<PdfNLMContentExtractor> extractors;
+    private ExecutorService processingExecutor;
+    private ExecutorService batchProcessingExecutor;
     @Autowired
-    TaskManager taskManager;
+    private TaskManager taskManager;
 
     public CermineExtractorServiceImpl() {
+        this(4, 0);
     }
 
+    public CermineExtractorServiceImpl(int threadPoolSize, int maxQueueForBatch){
+        this.threadPoolSize = threadPoolSize;
+        this.maxQueueForBatch = maxQueueForBatch;
+    }
+    
     @PostConstruct
     public void init() {
         try {
@@ -81,16 +87,8 @@ public class CermineExtractorServiceImpl implements CermineExtractorService {
         return threadPoolSize;
     }
 
-    public void setThreadPoolSize(int threadPoolSize) {
-        this.threadPoolSize = threadPoolSize;
-    }
-
     public int getMaxQueueForBatch() {
         return maxQueueForBatch;
-    }
-
-    public void setMaxQueueForBatch(int maxQueueForBatch) {
-        this.maxQueueForBatch = maxQueueForBatch;
     }
 
     @Override
@@ -172,7 +170,7 @@ public class CermineExtractorServiceImpl implements CermineExtractorService {
         PdfNLMContentExtractor e = null;
         try {
             e = obtainExtractor();
-            result.processingStart = new Date();
+            result.setProcessingStart(new Date());
             log.debug("Starting extraction on the input stream...");
             Element resEl = e.extractContent(input);
             log.debug("Extraction ok..");
