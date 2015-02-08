@@ -4,6 +4,7 @@
 *.ear
 *.class
 *.log
+.DS_Store
 
 #vim specific
 *~

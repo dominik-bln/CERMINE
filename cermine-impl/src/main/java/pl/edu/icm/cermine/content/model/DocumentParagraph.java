@@ -19,14 +19,15 @@
 package pl.edu.icm.cermine.content.model;
 
 /**
- * Document paragraph class.
- *
+ * This class represents an immutable paragraph in a document
+ * 
  * @author Dominika Tkaczyk
+ * @author Dominik Horb <cermine@dominik.berlin>
  */
 public class DocumentParagraph {
 
-    private String text;
-    private DocumentContentStructure contentStructure;
+    private final String text;
+    private final DocumentContentStructure contentStructure;
 
     public DocumentParagraph(String text, DocumentContentStructure contentStructure) {
         this.text = text;
@@ -37,16 +38,7 @@ public class DocumentParagraph {
         return text;
     }
 
-    public void setText(String text) {
-        this.text = text;
-    }
-
     public DocumentContentStructure getContentStructure() {
         return contentStructure;
     }
-
-    public void setContentStructure(DocumentContentStructure contentStructure) {
-        this.contentStructure = contentStructure;
-    }
-
 }

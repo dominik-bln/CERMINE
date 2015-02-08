@@ -47,6 +47,7 @@ public class CermineExtractorServiceImpl implements CermineExtractorService {
     private final int threadPoolSize;
     private final int maxQueueForBatch;
     private final Logger log = LoggerFactory.getLogger(CermineExtractorServiceImpl.class);
+   
     private List<PdfNLMContentExtractor> extractors;
     private ExecutorService processingExecutor;
     private ExecutorService batchProcessingExecutor;
