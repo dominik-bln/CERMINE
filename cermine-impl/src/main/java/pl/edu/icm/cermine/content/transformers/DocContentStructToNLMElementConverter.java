@@ -43,7 +43,7 @@ public class DocContentStructToNLMElementConverter implements ModelToModelConver
     }
     
     private List<Element> toHTML(DocumentContentStructure dcs) {
-        List<Element> elements = new ArrayList<Element>();
+        List<Element> elements = new ArrayList<>();
         if (dcs.getHeader() == null) {
             for (DocumentContentStructure part : dcs.getParts()) {
                 elements.addAll(toHTML(part));

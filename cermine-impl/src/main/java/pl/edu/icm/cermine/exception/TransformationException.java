@@ -24,7 +24,7 @@ package pl.edu.icm.cermine.exception;
  * @author Dominika Tkaczyk
  *
  */
-public class TransformationException extends Exception {
+public class TransformationException extends CermineException {
         private static final long serialVersionUID = -4871017514024156616L;
 
         public TransformationException() {

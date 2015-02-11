@@ -1,23 +1,20 @@
 /**
- * This file is part of CERMINE project.
- * Copyright (c) 2011-2013 ICM-UW
+ * This file is part of CERMINE project. Copyright (c) 2011-2013 ICM-UW
  *
- * CERMINE is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * CERMINE is free software: you can redistribute it and/or modify it under the terms of the GNU
+ * Affero General Public License as published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
  *
- * CERMINE is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
+ * CERMINE is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public License
- * along with CERMINE. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License along with CERMINE. If
+ * not, see <http://www.gnu.org/licenses/>.
  */
-
 package pl.edu.icm.cermine.service;
 
+import pl.edu.icm.cermine.service.exceptions.ServiceException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +25,7 @@ import static org.junit.Assert.*;
 import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.edu.icm.cermine.AbstractExtractor;
 import pl.edu.icm.cermine.PdfNLMContentExtractor;
 import pl.edu.icm.cermine.exception.AnalysisException;
 
@@ -37,10 +35,14 @@ import pl.edu.icm.cermine.exception.AnalysisException;
  */
 public class CermineExtractorServiceImplTest {
 
-    private Logger log = LoggerFactory.getLogger(CermineExtractorServiceImplTest.class);
+    private final Logger log = LoggerFactory.getLogger(CermineExtractorServiceImplTest.class);
+
+    private boolean sleeping = true;
 
     /**
      * Test of extractNLM method, of class CermineExtractorServiceImpl.
+     *
+     * @throws java.lang.Exception
      */
     @Test
     public void testExtractNLM() throws Exception {
@@ -48,7 +50,6 @@ public class CermineExtractorServiceImplTest {
         InputStream is = this.getClass().getResourceAsStream("/pdf/test1.pdf");
         log.debug("Input stream is: {}", is);
         CermineExtractorServiceImpl instance = new CermineExtractorServiceImpl();
-        instance.init();
         ExtractionResult result = instance.extractNLM(is);
         assertNotNull(result);
         assertTrue(result.isSucceeded());
@@ -56,16 +57,17 @@ public class CermineExtractorServiceImplTest {
 
     /**
      * Test of extractNLM method, of class CermineExtractorServiceImpl.
+     *
+     * @throws java.lang.Exception
      */
     @Test
     public void testQueue() throws Exception {
         System.out.println("Queue overflow");
         final CermineExtractorServiceImpl instance = new CermineExtractorServiceImpl(1, 1);
-        instance.init();
-        final Map<Integer, Boolean> succ = new HashMap<Integer, Boolean>();
+        final Map<Integer, Boolean> succ = new HashMap<>();
 
         //run immediately two, then 
-        List<Thread> threads = new ArrayList<Thread>();
+        List<Thread> threads = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             final int k = i;
             threads.add(new Thread(new Runnable() {
@@ -95,7 +97,7 @@ public class CermineExtractorServiceImplTest {
                 t.join();
             }
         }
-        
+
         for (int i = 0; i < 2; i++) {
             assertTrue(succ.get(i));
         }
@@ -103,17 +105,17 @@ public class CermineExtractorServiceImplTest {
         assertFalse(succ.get(3));
 
     }
-    boolean sleeping = true;
 
     /**
      * Test of obtainExtractor method, of class CermineExtractorServiceImpl.
+     *
+     * @throws java.lang.Exception
      */
     @Test
     public void testObtainExtractor() throws Exception {
         System.out.println("obtainExtractor");
         final CermineExtractorServiceImpl instance = new CermineExtractorServiceImpl(3, 0);
-        instance.init();
-        List<PdfNLMContentExtractor> list = new ArrayList<PdfNLMContentExtractor>();
+        List<AbstractExtractor> list = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             list.add(instance.obtainExtractor());
         }
@@ -121,7 +123,7 @@ public class CermineExtractorServiceImplTest {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                PdfNLMContentExtractor res = instance.obtainExtractor();
+                AbstractExtractor res = instance.obtainExtractor();
                 sleeping = false;
             }
         }).start();

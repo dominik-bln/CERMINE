@@ -264,7 +264,7 @@ public class ArticleMeta {
     private static Map<String, String> extractAffiliations(Document nlm, String xpath) throws JDOMException {
         XPath xPath = XPath.newInstance(xpath);
         List<Element> nodes = xPath.selectNodes(nlm);
-        Map<String, String> affMap = new HashMap<String, String>();
+        Map<String, String> affMap = new HashMap<>();
         for (Element node : nodes) {
             String affId = node.getAttributeValue("id");
             affMap.put(affId, node.getValue().trim().replaceFirst(affId, "").trim());
@@ -275,7 +275,7 @@ public class ArticleMeta {
     private static List<ContributorMeta> extractContributorMeta(Document nlm, String xpath, Map<String, String> affiliations) throws JDOMException {
         XPath xPath = XPath.newInstance(xpath);
         List<Element> nodes = xPath.selectNodes(nlm);
-        List<ContributorMeta> authors = new ArrayList<ContributorMeta>();
+        List<ContributorMeta> authors = new ArrayList<>();
         for (Element node : nodes) {
             Element nameEl = node.getChild("name");
             String name;
@@ -314,7 +314,7 @@ public class ArticleMeta {
     private static List<ArticleMeta> extractReferences(Document nlm, String xpath) throws JDOMException {
         XPath xPath = XPath.newInstance(xpath);
         List<Element> nodes = xPath.selectNodes(nlm);
-        List<ArticleMeta> references = new ArrayList<ArticleMeta>();
+        List<ArticleMeta> references = new ArrayList<>();
         for (Element node : nodes) {
             ArticleMeta reference = new ArticleMeta();
             
@@ -330,7 +330,7 @@ public class ArticleMeta {
             reference.setIssue(node.getChildText("issue"));
             
             List<Element> authorNodes = node.getChildren("string-name");
-            List<ContributorMeta> authors = new ArrayList<ContributorMeta>();
+            List<ContributorMeta> authors = new ArrayList<>();
             for (Element authorNode : authorNodes) {
                 ContributorMeta author = new ContributorMeta();
                 author.setGivennames(authorNode.getChildText("given-names"));
@@ -389,7 +389,7 @@ public class ArticleMeta {
             res.setAcceptedDate(extractDateValue(nlm, "//history/date[@date-type='accepted']"));
 
             XPath xPath = XPath.newInstance("//kwd");
-            List<String> kwds = new ArrayList<String>();
+            List<String> kwds = new ArrayList<>();
             for (Object e : xPath.selectNodes(nlm)) {
                 kwds.add(((Element) e).getTextTrim());
             }
@@ -408,8 +408,8 @@ public class ArticleMeta {
         private String name;
         private String givennames;
         private String surname;
-        private List<String> affiliations = new ArrayList<String>();
-        private List<String> emails = new ArrayList<String>();
+        private List<String> affiliations = new ArrayList<>();
+        private List<String> emails = new ArrayList<>();
 
         public ContributorMeta() {
         }

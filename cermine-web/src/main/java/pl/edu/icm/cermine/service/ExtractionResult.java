@@ -1,5 +1,6 @@
 /**
- * This file is part of CERMINE project. Copyright (c) 2011-2013 ICM-UW
+ * This file is part of CERMINE project. 
+ * Copyright (c) 2011-2013 ICM-UW
  *
  * CERMINE is free software: you can redistribute it and/or modify it under the terms of the GNU
  * Affero General Public License as published by the Free Software Foundation, either version 3 of
@@ -36,7 +37,7 @@ public class ExtractionResult {
     private String html = "";
     private ArticleMeta meta;
     private Throwable error;
-
+    
     public String getRequestMD5() {
         return requestMD5;
     }

@@ -21,6 +21,9 @@ package pl.edu.icm.cermine.web.controller;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+/**
+ * A dummy Validator to enable proper bean instantiation.
+ */
 public class DummyValidator implements Validator {
 
 	@Override

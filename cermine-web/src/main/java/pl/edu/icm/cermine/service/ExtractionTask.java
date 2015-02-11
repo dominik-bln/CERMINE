@@ -1,21 +1,17 @@
 /**
- * This file is part of CERMINE project.
- * Copyright (c) 2011-2013 ICM-UW
+ * This file is part of CERMINE project. Copyright (c) 2011-2013 ICM-UW
  *
- * CERMINE is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * CERMINE is free software: you can redistribute it and/or modify it under the terms of the GNU
+ * Affero General Public License as published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
  *
- * CERMINE is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
+ * CERMINE is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public License
- * along with CERMINE. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License along with CERMINE. If
+ * not, see <http://www.gnu.org/licenses/>.
  */
-
 package pl.edu.icm.cermine.service;
 
 import java.util.Date;
@@ -26,51 +22,22 @@ import java.util.Date;
  */
 public class ExtractionTask {
 
-    public static enum TaskStatus {
-
-        CREATED("queue", "SUBMITTED"),
-        QUEUED("queue", "QUEUED"),
-        PROCESSING("processing", "PROCESSING"),
-        FINISHED("success", "SUCCESS", true),
-        FAILED("failure", "FAILURE", true);
-        String css;
-        String text;
-        boolean finalState;
-
-        
-        TaskStatus(String css, String text) {
-            this(css, text, false);
-        }
-        
-        TaskStatus(String css, String text, boolean f) {
-            this.css = css;
-            this.text = text;
-            finalState = f;
-        }
-
-        public String getCss() {
-            return css;
-        }
-
-        public String getText() {
-            return text;
-        }
-
-        public boolean isFinalState() {
-            return finalState;
-        }
-        
-        
-    }
     private long id;
-    byte[] pdf;
-    String fileName;
-    String md5Sum;
+    private byte[] pdf;
+    private String fileName;
+    private String md5Sum;
     private TaskStatus status;
     private Date creationDate;
     private String clientAddress;
     private ExtractionResult result;
 
+    public ExtractionTask(byte[] pdf, String fileName, Date creationDate, TaskStatus status){
+        this.pdf = pdf; 
+        this.fileName = fileName;
+        this.creationDate = creationDate;
+        this.status = status;
+    }
+    
     public long getId() {
         return id;
     }
@@ -140,13 +107,11 @@ public class ExtractionTask {
     }
 
     public boolean isSucceeded() {
-        return isFinished() && status!=TaskStatus.FAILED;
-    }
-    
-    public boolean isFailed() {
-        return status==TaskStatus.FAILED;
+        return isFinished() && status != TaskStatus.FAILED;
     }
 
-    
-    
+    public boolean isFailed() {
+        return status == TaskStatus.FAILED;
+    }
+
 }

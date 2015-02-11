@@ -55,42 +55,7 @@ public class ExtractionUtils {
      */
     public static BxDocument extractStructure(ComponentConfiguration conf, InputStream stream) 
             throws AnalysisException {
-        BxDocument doc = conf.characterExtractor.extractCharacters(stream);
-        doc = conf.documentSegmenter.segmentDocument(doc);
-        doc = conf.readingOrderResolver.resolve(doc);
-        return conf.initialClassifier.classifyZones(doc);
-    }
-    
-    /**
-     * Extracts metadata from input stream.
-     * 
-     * @param conf extraction configuration
-     * @param stream PDF stream
-     * @return document's metadata
-     * @throws AnalysisException 
-     */
-    public static DocumentMetadata extractMetadata(ComponentConfiguration conf, InputStream stream) 
-            throws AnalysisException {
-        BxDocument doc = extractStructure(conf, stream);
-        return extractMetadata(conf, doc);
-    }
-    
-    /**
-     * Extracts NLM metadata from input stream.
-     * 
-     * @param conf extraction configuration
-     * @param stream PDF stream
-     * @return document's metadata in NLM format
-     * @throws AnalysisException 
-     */
-    public static Element extractMetadataAsNLM(ComponentConfiguration conf, InputStream stream) 
-            throws AnalysisException {
-        try {
-            DocumentMetadataToNLMElementConverter converter = new DocumentMetadataToNLMElementConverter();
-            return converter.convert(extractMetadata(conf, stream));
-        } catch (TransformationException ex) {
-            throw new AnalysisException("Cannot extract metadata from the document!", ex);
-        }
+        return conf.initialClassifier.classifyZones(ExtractionUtils.createDocumentFromStream(conf, stream));
     }
     
     /**
@@ -128,21 +93,12 @@ public class ExtractionUtils {
             throw new AnalysisException("Cannot extract metadata from the document!", ex);
         }
     }
-
-    /**
-     * Extracts raw text from input stream.
-     * 
-     * @param conf extraction configuration
-     * @param stream PDF stream
-     * @return raw text content
-     * @throws AnalysisException 
-     */
-    public static String extractRawText(ComponentConfiguration conf, InputStream stream)
-            throws AnalysisException {
+    
+    public static BxDocument createDocumentFromStream(ComponentConfiguration conf, InputStream stream) throws AnalysisException{
         BxDocument doc = conf.characterExtractor.extractCharacters(stream);
         doc = conf.documentSegmenter.segmentDocument(doc);
         doc = conf.readingOrderResolver.resolve(doc);
-        return extractRawText(conf, doc);
+        return doc;
     }
     
     /**
@@ -156,20 +112,6 @@ public class ExtractionUtils {
     public static String extractRawText(ComponentConfiguration conf, BxDocument document) 
             throws AnalysisException {
         return ContentCleaner.cleanAll(document.toText());
-    }
-  
-    /**
-     * Extracts references from input stream.
-     * 
-     * @param conf extraction configuration
-     * @param stream PDF stream
-     * @return document's references
-     * @throws AnalysisException 
-     */
-    public static BibEntry[] extractReferences(ComponentConfiguration conf, InputStream stream)
-            throws AnalysisException {
-        BxDocument doc = extractStructure(conf, stream);
-        return extractReferences(conf, doc);
     }
 
     /**
@@ -191,32 +133,6 @@ public class ExtractionUtils {
     }
     
     /**
-     * Extracts references from input stream.
-     * 
-     * @param conf extraction configuration
-     * @param stream PDF stream
-     * @return document's references in NLM format
-     * @throws AnalysisException 
-     */
-    public static Element[] extractReferencesAsNLM(ComponentConfiguration conf, InputStream stream)
-            throws AnalysisException {
-        return convertReferences(extractReferences(conf, stream));
-    }
-
-    /**
-     * Extracts references from document's box structure.
-     * 
-     * @param conf extraction configuration
-     * @param document box structure
-     * @return document's references in NLM format
-     * @throws AnalysisException 
-     */
-    public static Element[] extractReferencesAsNLM(ComponentConfiguration conf, BxDocument document) 
-            throws AnalysisException {
-        return convertReferences(extractReferences(conf, document));
-    }
-    
-    /**
      * Converts references from BibEntry model to NLM
      * 
      * @param entries BibEntry objects
@@ -225,7 +141,7 @@ public class ExtractionUtils {
      */
     public static Element[] convertReferences(BibEntry[] entries) 
             throws AnalysisException {
-        List<Element> elements = new ArrayList<Element>(entries.length);
+        List<Element> elements = new ArrayList<>(entries.length);
         BibEntryToNLMElementConverter converter = new BibEntryToNLMElementConverter();
         for (BibEntry entry : entries) {
             try {
@@ -235,26 +151,6 @@ public class ExtractionUtils {
             }
         }
         return elements.toArray(new Element[entries.length]);
-    }
-    
-    /**
-     * Extracts full text from input stream.
-     * 
-     * @param conf extraction configuration
-     * @param stream PDF stream
-     * @return document's full text in NLM format
-     * @throws AnalysisException 
-     */
-    public static Element extractTextAsNLM(ComponentConfiguration conf, InputStream stream) 
-            throws AnalysisException {
-        try {
-            ModelToModelConverter<DocumentContentStructure, Element> converter
-                    = new DocContentStructToNLMElementConverter();
-            DocumentContentStructure struct = extractText(conf, stream);
-            return converter.convert(struct);
-        } catch (TransformationException ex) {
-            throw new AnalysisException("Cannot extract text from document!", ex);
-        }
     }
 
     /**
@@ -276,20 +172,6 @@ public class ExtractionUtils {
             throw new AnalysisException("Cannot extract text from document!", ex);
         }
     }
-    
-    /**
-     * Extracts full text from input stream.
-     * 
-     * @param conf extraction configuration
-     * @param stream PDF stream
-     * @return document's full text
-     * @throws AnalysisException 
-     */
-    public static DocumentContentStructure extractText(ComponentConfiguration conf, InputStream stream) 
-            throws AnalysisException {
-        BxDocument doc = extractStructure(conf, stream);
-        return extractText(conf, doc);
-    }
 
     /**
      * Extracts full text from document's box structure.
@@ -299,7 +181,7 @@ public class ExtractionUtils {
      * @return document's full text
      * @throws AnalysisException 
      */
-    public static DocumentContentStructure extractText(ComponentConfiguration conf, BxDocument document) 
+    private static DocumentContentStructure extractText(ComponentConfiguration conf, BxDocument document) 
             throws AnalysisException {
         try {
             BxDocument doc = conf.contentFilter.filter(document);

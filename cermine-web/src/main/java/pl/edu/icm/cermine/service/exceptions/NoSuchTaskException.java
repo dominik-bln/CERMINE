@@ -16,36 +16,17 @@
  * along with CERMINE. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package pl.edu.icm.cermine.service;
+package pl.edu.icm.cermine.service.exceptions;
 
 /**
- *
- * @author axnow
+ * @author Aleksander Nowinski <a.nowinski@icm.edu.pl>
  */
-public class ServiceException extends Exception {
+public class NoSuchTaskException extends Exception {
 
-    /**
-     * Creates a new instance of
-     * <code>ServiceException</code> without detail message.
-     */
-    public ServiceException() {
-    }
+    long taskId;
 
-    /**
-     * Constructs an instance of
-     * <code>ServiceException</code> with the specified detail message.
-     *
-     * @param msg the detail message.
-     */
-    public ServiceException(String msg) {
-        super(msg);
-    }
-    
-    public ServiceException(String msg, Throwable throwable) {
-        super(msg, throwable);
+    public NoSuchTaskException(long taskId) {
+        super(String.format("Task %d is not registered.", taskId));
+        this.taskId = taskId;
     }
 }

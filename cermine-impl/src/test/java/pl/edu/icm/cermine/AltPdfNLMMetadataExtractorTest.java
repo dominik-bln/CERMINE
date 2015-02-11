@@ -33,6 +33,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 import pl.edu.icm.cermine.exception.AnalysisException;
+import pl.edu.icm.cermine.exception.CermineException;
+import pl.edu.icm.cermine.exception.TransformationException;
 import pl.edu.icm.cermine.structure.SVMAlternativeMetadataZoneClassifier;
 
 /**
@@ -48,15 +50,15 @@ public class AltPdfNLMMetadataExtractorTest {
     @Before
     public void setUp() throws AnalysisException, IOException {
         extractor = new PdfNLMMetadataExtractor();
-        extractor.getConf().setMetadataZoneClassifier(SVMAlternativeMetadataZoneClassifier.getDefaultInstance());
+        extractor.getConfiguration().setMetadataZoneClassifier(SVMAlternativeMetadataZoneClassifier.getDefaultInstance());
     }
     
     @Test
-    public void metadataExtractionTest() throws AnalysisException, IOException, JDOMException, SAXException {
+    public void metadataExtractionTest() throws AnalysisException, IOException, JDOMException, SAXException, TransformationException, CermineException {
         InputStream testStream = this.getClass().getResourceAsStream(TEST_FILE);
         Element testMetadata;
         try {
-            testMetadata = extractor.extractMetadataAsNLM(testStream);
+            testMetadata = extractor.extract(testStream);
         } finally {
             testStream.close();
         }

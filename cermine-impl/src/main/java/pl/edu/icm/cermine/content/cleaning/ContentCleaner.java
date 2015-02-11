@@ -72,7 +72,7 @@ public class ContentCleaner {
             contentPart.setCleanHeaderText(cleanLigatures(sb.toString().trim()));
             
             List<BxLine> contentLines = contentPart.getContentLines();
-            List<String> contentTexts = new ArrayList<String>();
+            List<String> contentTexts = new ArrayList<>();
             
             double maxLen = Double.NEGATIVE_INFINITY;
             for (BxLine line : contentLines) {

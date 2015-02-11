@@ -110,9 +110,7 @@ public class PdfBxStructureExtractor {
             
                 BxDocumentToTrueVizWriter writer = new BxDocumentToTrueVizWriter();
                 writer.write(new FileWriter(strF), doc.getPages());
-            } catch (AnalysisException ex) {
-               ex.printStackTrace();
-            } catch (TransformationException ex) {
+            } catch (AnalysisException | TransformationException ex) {
                ex.printStackTrace();
             }
                 

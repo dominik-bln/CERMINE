@@ -26,7 +26,7 @@ import java.util.Map.Entry;
 public class CosineDistance {
 
     private Map<String, Integer> calculateVector(List<String> tokens) {
-        HashMap<String, Integer> vector = new HashMap<String, Integer>();
+        HashMap<String, Integer> vector = new HashMap<>();
         for (String token : tokens) {
             if (vector.containsKey(token)) {
                 vector.put(token, vector.get(token) + 1);

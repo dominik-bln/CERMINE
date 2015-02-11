@@ -51,7 +51,7 @@ public class PdfRawTextExtractor {
      * @throws AnalysisException 
      */
     public String extractText(InputStream stream) throws AnalysisException {
-        return ExtractionUtils.extractRawText(conf, stream);
+        return ExtractionUtils.extractRawText(conf, ExtractionUtils.createDocumentFromStream(conf, stream));
     }
     
     /**

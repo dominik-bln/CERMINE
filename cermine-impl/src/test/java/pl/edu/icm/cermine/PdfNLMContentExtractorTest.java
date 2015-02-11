@@ -33,6 +33,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 import pl.edu.icm.cermine.exception.AnalysisException;
+import pl.edu.icm.cermine.exception.CermineException;
 
 /**
  *
@@ -50,11 +51,11 @@ public class PdfNLMContentExtractorTest {
     }
     
     @Test
-    public void contentExtractionTest() throws AnalysisException, JDOMException, IOException, SAXException {
+    public void contentExtractionTest() throws AnalysisException, JDOMException, IOException, SAXException, CermineException {
         InputStream testStream = this.getClass().getResourceAsStream(TEST_FILE);
         Element testContent;
         try {
-            testContent = extractor.extractContent(testStream);
+            testContent = extractor.extract(testStream);
         } finally {
             testStream.close();
         }

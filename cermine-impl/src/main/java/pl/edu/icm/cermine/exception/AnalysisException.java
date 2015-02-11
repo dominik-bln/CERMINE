@@ -24,7 +24,7 @@ package pl.edu.icm.cermine.exception;
  * @author Lukasz Bolikowski (bolo@icm.edu.pl)
  *
  */
-public class AnalysisException extends Exception {
+public class AnalysisException extends CermineException {
 	private static final long serialVersionUID = 4601197315845837554L;
 
 	public AnalysisException() {

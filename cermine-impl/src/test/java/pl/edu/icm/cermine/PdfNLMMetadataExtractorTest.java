@@ -33,6 +33,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 import pl.edu.icm.cermine.exception.AnalysisException;
+import pl.edu.icm.cermine.exception.CermineException;
+import pl.edu.icm.cermine.exception.TransformationException;
 
 /**
  *
@@ -50,11 +52,11 @@ public class PdfNLMMetadataExtractorTest {
     }
     
     @Test
-    public void metadataExtractionTest() throws AnalysisException, IOException, JDOMException, SAXException {
+    public void metadataExtractionTest() throws AnalysisException, IOException, JDOMException, SAXException, TransformationException, CermineException {
         InputStream testStream = this.getClass().getResourceAsStream(TEST_FILE);
-        Element testMetadata;
+        Element testMetadata = null;
         try {
-            testMetadata = extractor.extractMetadataAsNLM(testStream);
+            testMetadata = extractor.extract(testStream);
         } finally {
             testStream.close();
         }

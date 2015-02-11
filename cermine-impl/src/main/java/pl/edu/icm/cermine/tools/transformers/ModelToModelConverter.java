@@ -33,20 +33,20 @@ public interface ModelToModelConverter<S, T> {
     /**
      * Converts source model into the target model.
      * 
-     * @param source the source object
-     * @param hints additional hints used during the conversion
-     * @return the converted object
-     * @throws TransformationException 
+     * @param source The source object.
+     * @param hints Additional hints used during the conversion.
+     * @return The converted object.
+     * @throws TransformationException In case an error occurs.
      */
-    T convert(S source, Object... hints) throws TransformationException;
+    public T convert(S source, Object... hints) throws TransformationException;
     
     /**
      * Converts source model into the target model.
      * 
-     * @param source the list of source objects
-     * @param hints additional hints used during the conversion
-     * @return the list of converted objects
-     * @throws TransformationException 
+     * @param source The list of source objects.
+     * @param hints Additional hints used during the conversion.
+     * @return The list of converted objects.
+     * @throws TransformationException In case an error occurs.
      */
-    List<T> convertAll(List<S> source, Object... hints) throws TransformationException;
+    public List<T> convertAll(List<S> source, Object... hints) throws TransformationException;
 }

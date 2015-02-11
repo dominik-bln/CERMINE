@@ -19,19 +19,20 @@
 package pl.edu.icm.cermine.service;
 
 import java.util.List;
+import pl.edu.icm.cermine.service.exceptions.NoSuchTaskException;
 
 /**
- *
+ * IMPORTANT: This interface needs to be present in order for spring autowire to work.
+ * 
  * @author Aleksander Nowinski <a.nowinski@icm.edu.pl>
  */
 public interface TaskManager {
 
-    ExtractionTask getTask(long id) throws NoSuchTaskException;
+    public ExtractionTask getTask(long id) throws NoSuchTaskException;
 
-    long registerTask(ExtractionTask task);
+    public long registerTask(ExtractionTask task);
     
-    List<ExtractionTask> taskList();
+    public List<ExtractionTask> taskList();
 
-    String getProperFilename(String filename);
-    
+    public String getProperFilename(String filename);
 }

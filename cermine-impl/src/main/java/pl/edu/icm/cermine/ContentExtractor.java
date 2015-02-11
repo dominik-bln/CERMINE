@@ -47,31 +47,17 @@ public class ContentExtractor {
     
     private ComponentConfiguration conf;
     
-    /** input PDF file */
     private InputStream pdfFile;
     
     /** document's geometric structure */
     private BxDocument bxDocument;
     
-    /** document's metadata */
     private DocumentMetadata metadata;
-    
-    /** document's metadata in NLM format */
     private Element nlmMetadata;
-    
-    /** document's list of references */
     private List<BibEntry> references;
-    
-    /** document's list of references in NLM format */
     private List<Element> nlmReferences;
-    
-    /** raw full text */
     private String rawFullText;
-    
-    /** full text in NLM format */
     private Element nlmFullText;
-    
-    /** extracted content in NLM format */
     private Element nlmContent;
 
     public ContentExtractor() throws AnalysisException {

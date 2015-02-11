@@ -21,7 +21,9 @@ package pl.edu.icm.cermine;
 import java.io.InputStream;
 import org.jdom.Element;
 import pl.edu.icm.cermine.exception.AnalysisException;
-import pl.edu.icm.cermine.metadata.model.DocumentMetadata;
+import pl.edu.icm.cermine.exception.CermineException;
+import pl.edu.icm.cermine.exception.TransformationException;
+import pl.edu.icm.cermine.metadata.transformers.DocumentMetadataToNLMElementConverter;
 import pl.edu.icm.cermine.structure.model.BxDocument;
 
 
@@ -30,64 +32,25 @@ import pl.edu.icm.cermine.structure.model.BxDocument;
  *
  * @author Dominika Tkaczyk
  */
-public class PdfNLMMetadataExtractor {
-
-    private ComponentConfiguration conf;
+public class PdfNLMMetadataExtractor extends AbstractExtractor<InputStream, Element>{
     
     public PdfNLMMetadataExtractor() throws AnalysisException {
-        conf = new ComponentConfiguration();
-    }
-    
-    /**
-     * Extracts metadata from input stream.
-     *
-     * @param stream PDF stream
-     * @return document's metadata
-     * @throws AnalysisException 
-     */
-    public DocumentMetadata extractMetadata(InputStream stream) throws AnalysisException {
-        return ExtractionUtils.extractMetadata(conf, stream);
+        super();
     }
     
     /**
      * Extracts NLM metadata from input stream.
      * 
-     * @param stream PDF stream
+     * @param input PDF stream
      * @return document's metadata in NLM format
      * @throws AnalysisException 
+     * @throws TransformationException 
      */
-    public Element extractMetadataAsNLM(InputStream stream) throws AnalysisException {
-        return ExtractionUtils.extractMetadataAsNLM(conf, stream);
-    }
-    
-    /**
-     * Extracts metadata from document's structure.
-     * 
-     * @param document box structure
-     * @return document's metadata
-     * @throws AnalysisException 
-     */
-    public DocumentMetadata extractMetadata(BxDocument document) throws AnalysisException {
-        return ExtractionUtils.extractMetadata(conf, document);
-    }
-    
-    /**
-     * Extracts NLM metadata from document's structure.
-     * 
-     * @param document box structure
-     * @return document's metadata in NLM format
-     * @throws AnalysisException 
-     */
-    public Element extractMetadataAsNLM(BxDocument document) throws AnalysisException {
-        return ExtractionUtils.extractMetadataAsNLM(conf, document);
-    }
-
-    public ComponentConfiguration getConf() {
-        return conf;
-    }
-
-    public void setConf(ComponentConfiguration conf) {
-        this.conf = conf;
+    @Override
+    public Element extract(InputStream input) throws CermineException {
+        BxDocument doc = this.extractBasicStructure(input);
+        DocumentMetadataToNLMElementConverter converter = new DocumentMetadataToNLMElementConverter();
+        return converter.convert(ExtractionUtils.extractMetadata(this.configuration, doc));
     }
     
 }
