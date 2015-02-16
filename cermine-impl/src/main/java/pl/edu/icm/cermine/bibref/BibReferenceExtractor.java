@@ -22,7 +22,7 @@ import pl.edu.icm.cermine.exception.AnalysisException;
 import pl.edu.icm.cermine.structure.model.BxDocument;
 
 /**
- * Interface for extracting individual references strings from zones labelled as REFERENCES. 
+ * Interface for extracting individual references strings from zones labeled as REFERENCES. 
  *
  * @author Dominika Tkaczyk (d.tkaczyk@icm.edu.pl)
  */

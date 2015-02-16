@@ -56,7 +56,7 @@ public class CRFBibReferenceParser implements BibReferenceParser<BibEntry> {
     private static final String defaultModelFile = "/pl/edu/icm/cermine/bibref/acrf.ser.gz";
     
     private static final String defaultWordsFile = "/pl/edu/icm/cermine/bibref/crf-train-words.txt";
-    private Set<String> words;
+    private final Set<String> words;
 
     public CRFBibReferenceParser(String modelFile) throws AnalysisException {
         System.setProperty("java.util.logging.config.file",
@@ -67,9 +67,7 @@ public class CRFBibReferenceParser implements BibReferenceParser<BibEntry> {
             is = new FileInputStream(new File(modelFile));
             ois = new ObjectInputStream(new BufferedInputStream(new GZIPInputStream(is)));
             model = (ACRF)(ois.readObject());
-        } catch (ClassNotFoundException ex) {
-            throw new AnalysisException("Cannot set model!", ex);
-        } catch (IOException ex) {
+        } catch (ClassNotFoundException | IOException ex) {
             throw new AnalysisException("Cannot set model!", ex);
         } finally {
             try {
@@ -81,7 +79,7 @@ public class CRFBibReferenceParser implements BibReferenceParser<BibEntry> {
             }
         }
         
-        words = new HashSet<String>();
+        words = new HashSet<>();
         InputStream wis = CitationUtils.class.getResourceAsStream(defaultWordsFile);
         try {
             words.addAll(IOUtils.readLines(wis));
@@ -97,9 +95,7 @@ public class CRFBibReferenceParser implements BibReferenceParser<BibEntry> {
         try {
             ois = new ObjectInputStream(new BufferedInputStream(new GZIPInputStream(modelInputStream)));
             model = (ACRF)(ois.readObject());
-        } catch (IOException ex) {
-            throw new AnalysisException("Cannot set model!", ex);
-        } catch (ClassNotFoundException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             throw new AnalysisException("Cannot set model!", ex);
         } finally {
             try {
@@ -110,7 +106,7 @@ public class CRFBibReferenceParser implements BibReferenceParser<BibEntry> {
                 throw new AnalysisException("Cannot set model!", ex);
             }
         }
-        words = new HashSet<String>();
+        words = new HashSet<>();
         InputStream wis = CitationUtils.class.getResourceAsStream(defaultWordsFile);
         try {
             words.addAll(IOUtils.readLines(wis));

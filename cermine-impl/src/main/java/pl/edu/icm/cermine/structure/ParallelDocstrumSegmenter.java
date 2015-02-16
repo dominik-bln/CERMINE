@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
-import pl.edu.icm.cermine.PdfNLMContentExtractor;
+import pl.edu.icm.cermine.Cermine;
 import pl.edu.icm.cermine.exception.AnalysisException;
 import pl.edu.icm.cermine.structure.model.BxDocument;
 import pl.edu.icm.cermine.structure.model.BxPage;
@@ -80,10 +80,10 @@ public class ParallelDocstrumSegmenter extends DocstrumSegmenter {
 
     @Override
     public BxDocument segmentDocument(BxDocument document) throws AnalysisException {
-        Map<BxPage, List<Component>> componentMap = new HashMap<BxPage, List<Component>>();
+        Map<BxPage, List<Component>> componentMap = new HashMap<>();
 
-        ExecutorService exec = Executors.newFixedThreadPool(PdfNLMContentExtractor.THREADS_NUMBER);
-        ArrayList<Callable<NumBxPage>> tasks = new ArrayList<Callable<NumBxPage>>();
+        ExecutorService exec = Executors.newFixedThreadPool(Cermine.THREADS_NUMBER);
+        ArrayList<Callable<NumBxPage>> tasks = new ArrayList<>();
         for (BxPage page : document.getPages()) {
            tasks.add(new ComponentCounter(page));
         }
@@ -97,9 +97,7 @@ public class ParallelDocstrumSegmenter extends DocstrumSegmenter {
                 NumBxPage p = result.get();
                 componentMap.put(p.page, p.components);
             }
-        } catch (ExecutionException ex) {
-            throw new AnalysisException("Cannot segment pages!", ex);
-        } catch (InterruptedException ex) {
+        } catch (ExecutionException | InterruptedException ex) {
             throw new AnalysisException("Cannot segment pages!", ex);
         }
                 
@@ -108,8 +106,8 @@ public class ParallelDocstrumSegmenter extends DocstrumSegmenter {
         BxDocument output = new BxDocument();
         BxPage[] pages = new BxPage[document.getPages().size()];
         
-        exec = Executors.newFixedThreadPool(PdfNLMContentExtractor.THREADS_NUMBER);
-        tasks = new ArrayList<Callable<NumBxPage>>();
+        exec = Executors.newFixedThreadPool(Cermine.THREADS_NUMBER);
+        tasks = new ArrayList<>();
         int i = 0;
         for (BxPage page : document.getPages()) {
            tasks.add(new SingleSegmenter(page, i++));
@@ -129,9 +127,7 @@ public class ParallelDocstrumSegmenter extends DocstrumSegmenter {
                 }
             }
             return output;
-        } catch (ExecutionException ex) {
-            throw new AnalysisException("Cannot segment pages!", ex);
-        } catch (InterruptedException ex) {
+        } catch (ExecutionException | InterruptedException ex) {
             throw new AnalysisException("Cannot segment pages!", ex);
         }
     }

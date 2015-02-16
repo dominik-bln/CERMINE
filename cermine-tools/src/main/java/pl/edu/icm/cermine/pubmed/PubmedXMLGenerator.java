@@ -39,7 +39,7 @@ import pl.edu.icm.cermine.evaluation.tools.CosineDistance;
 import pl.edu.icm.cermine.evaluation.tools.SmithWatermanDistance;
 import pl.edu.icm.cermine.evaluation.tools.StringTools;
 import pl.edu.icm.cermine.evaluation.tools.XMLTools;
-import pl.edu.icm.cermine.exception.AnalysisException;
+import pl.edu.icm.cermine.exception.CermineException;
 import pl.edu.icm.cermine.exception.TransformationException;
 import pl.edu.icm.cermine.metadata.zoneclassification.tools.ZoneLocaliser;
 import pl.edu.icm.cermine.structure.model.*;
@@ -114,7 +114,7 @@ public class PubmedXMLGenerator {
 	}
 	
     public BxDocument generateTrueViz(InputStream pdfStream, InputStream nlmStream) 
-    		throws AnalysisException, ParserConfigurationException, SAXException, IOException, XPathExpressionException, TransformationException {
+    		throws CermineException, ParserConfigurationException, SAXException, IOException, XPathExpressionException, TransformationException {
         XPath xpath = XPathFactory.newInstance().newXPath();
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setValidating(false);
@@ -127,7 +127,7 @@ public class PubmedXMLGenerator {
         Document domDoc = builder.parse(nlmStream);
 
         PdfBxStructureExtractor structureExtractor = new PdfBxStructureExtractor();
-        BxDocument bxDoc = structureExtractor.extractStructure(pdfStream);
+        BxDocument bxDoc = structureExtractor.extract(pdfStream);
         Integer bxDocLen = bxDoc.asZones().size();
 
         SmartHashMap entries = new SmartHashMap();

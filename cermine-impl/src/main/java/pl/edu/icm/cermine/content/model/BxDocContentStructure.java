@@ -33,8 +33,8 @@ import pl.edu.icm.cermine.tools.classification.features.FeatureVectorBuilder;
  */
 public class BxDocContentStructure {
     
-    private List<BxLine> firstHeaderLines = new ArrayList<BxLine>();
-    private Map<BxLine, BxDocContentPart> parts = new HashMap<BxLine, BxDocContentPart>();
+    private final List<BxLine> firstHeaderLines = new ArrayList<>();
+    private final Map<BxLine, BxDocContentPart> parts = new HashMap<>();
 
 
     public void addFirstHeaderLine(BxPage page, BxLine headerLine) {
@@ -79,7 +79,7 @@ public class BxDocContentStructure {
     }
 
     public List<BxDocContentPart> getParts() {
-        List<BxDocContentPart> sortedParts = new ArrayList<BxDocContentPart>();
+        List<BxDocContentPart> sortedParts = new ArrayList<>();
         for (BxLine header : firstHeaderLines) {
             sortedParts.add(parts.get(header));
         }
@@ -98,14 +98,14 @@ public class BxDocContentStructure {
         
         private int levelId;
         
-        private BxPage page;
+        private final BxPage page;
 
         private BxLine firstHeaderLine;
-        private List<BxLine> headerLines = new ArrayList<BxLine>();
+        private List<BxLine> headerLines = new ArrayList<>();
         private String cleanHeaderText;
 
-        private List<BxLine> contentLines = new ArrayList<BxLine>();
-        private List<String> cleanContentTexts = new ArrayList<String>();
+        private List<BxLine> contentLines = new ArrayList<>();
+        private List<String> cleanContentTexts = new ArrayList<>();
 
         
         public BxDocContentPart(BxPage page, BxLine firstHeaderLine) {

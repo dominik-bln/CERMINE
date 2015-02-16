@@ -31,6 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 import pl.edu.icm.cermine.exception.AnalysisException;
+import pl.edu.icm.cermine.exception.CermineException;
 import pl.edu.icm.cermine.exception.TransformationException;
 import pl.edu.icm.cermine.structure.model.BxDocument;
 import pl.edu.icm.cermine.structure.tools.BxModelUtils;
@@ -55,11 +56,11 @@ public class PdfBxStructureExtractorTest {
     }
     
     @Test
-    public void metadataExtractionTest() throws AnalysisException, JDOMException, IOException, SAXException, TransformationException, URISyntaxException {
+    public void metadataExtractionTest() throws CermineException, JDOMException, IOException, SAXException, TransformationException, URISyntaxException {
         InputStream testStream = this.getClass().getResourceAsStream(TEST_FILE);
         BxDocument testDocument;
         try {
-            testDocument = extractor.extractStructure(testStream);
+            testDocument = extractor.extract(testStream);
         } finally {
             testStream.close();
         }

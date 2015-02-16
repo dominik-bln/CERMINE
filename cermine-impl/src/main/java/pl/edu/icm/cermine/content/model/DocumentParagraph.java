@@ -14,12 +14,14 @@
  */
 package pl.edu.icm.cermine.content.model;
 
+import pl.edu.icm.cermine.content.references.InTextReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * This class represents an immutable paragraph in a document and the in-text references it contains.
+ * This class represents an immutable paragraph in a document and the in-text references it
+ * contains.
  *
  * @author Dominika Tkaczyk
  * @author Dominik Horb <cermine@dominik.berlin>
@@ -50,21 +52,11 @@ public class DocumentParagraph {
      * @param inTextReference The in-text reference to add this paragraphs list.
      */
     public void addInTextReference(InTextReference inTextReference) {
-        if (this.checkValidPosition(inTextReference)) {
-            this.inTextReferences.add(inTextReference);
-            Collections.sort(this.inTextReferences);
-        }
-
-        throw new IllegalArgumentException("The given in-text reference has an invalid position for this paragraph.");
+        this.inTextReferences.add(inTextReference);
     }
-    
-    public int getInTextReferenceCount(){
+
+    public int getInTextReferenceCount() {
         return this.inTextReferences.size();
-    }
-
-    private boolean checkValidPosition(InTextReference inTextReference) {
-        return inTextReference.getPosition() >= 0 && 
-            inTextReference.getPosition() < this.text.length() - inTextReference.getLength();
     }
 
     /**

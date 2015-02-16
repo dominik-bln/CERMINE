@@ -27,7 +27,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import pl.edu.icm.cermine.content.model.DocumentContentStructure;
-import pl.edu.icm.cermine.content.model.DocumentHeader;
+import pl.edu.icm.cermine.content.model.DocumentHeading;
 import pl.edu.icm.cermine.content.model.DocumentParagraph;
 import pl.edu.icm.cermine.exception.TransformationException;
 import pl.edu.icm.cermine.tools.transformers.FormatToModelReader;
@@ -77,8 +77,8 @@ public class HTMLToDocContentStructReader implements FormatToModelReader<Documen
         Element current = elements.get(0);
         
         if (level > 0 && isHeader(current)) {
-            DocumentHeader header = new DocumentHeader(level, current.getValue(), dcs);
-            dcs.setHeader(header);
+            DocumentHeading header = new DocumentHeading(level, current.getValue(), dcs);
+            dcs.setHeading(header);
             current = getNext(++index, elements);
         }
         

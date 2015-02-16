@@ -20,7 +20,7 @@ package pl.edu.icm.cermine.content;
 
 import pl.edu.icm.cermine.content.cleaning.ContentCleaner;
 import pl.edu.icm.cermine.content.filtering.ContentFilter;
-import pl.edu.icm.cermine.content.headers.ContentHeadersExtractor;
+import pl.edu.icm.cermine.content.headings.ContentHeadersExtractor;
 import pl.edu.icm.cermine.content.model.BxDocContentStructure;
 import pl.edu.icm.cermine.content.model.DocumentContentStructure;
 import pl.edu.icm.cermine.content.transformers.BxContentStructToDocContentStructConverter;

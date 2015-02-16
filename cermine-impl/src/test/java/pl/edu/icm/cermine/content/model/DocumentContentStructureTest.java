@@ -53,7 +53,7 @@ public class DocumentContentStructureTest {
     
     @Test
     public void topLevelStructureTest() {
-        assertNull(structure.getHeader());
+        assertNull(structure.getHeading());
         assertNull(structure.getParent());
         assertEquals(4, structure.getParts().size());
         
@@ -61,25 +61,25 @@ public class DocumentContentStructureTest {
         assertEquals(11, structure.getAllParagraphCount());
         assertEquals(11, structure.getAllParagraphTexts().size());
        
-        assertEquals(10, structure.getHeaders().size());
-        assertEquals(10, structure.getAllHeaderTexts().size());
-        assertEquals("1. BACKGROUND", structure.getAllHeaderTexts().get(0));
-        assertEquals(10, structure.getAllHeaderCount());
+        assertEquals(10, structure.getHeadings().size());
+        assertEquals(10, structure.getAllHeadingTexts().size());
+        assertEquals("1. BACKGROUND", structure.getAllHeadingTexts().get(0));
+        assertEquals(10, structure.getAllHeadingsCount());
         
-        assertTrue(structure.containsHeaderText("3.1 OAI-PMH Data Provider"));
-        assertTrue(structure.containsHeaderFirstLineText("3.1 OAI-PMH Data Provider"));
-        assertFalse(structure.containsHeaderText("false"));
-        assertFalse(structure.containsHeaderFirstLineText("false"));
+        assertTrue(structure.containsHeadingText("3.1 OAI-PMH Data Provider"));
+        assertTrue(structure.containsHeadingFirstLineText("3.1 OAI-PMH Data Provider"));
+        assertFalse(structure.containsHeadingText("false"));
+        assertFalse(structure.containsHeadingFirstLineText("false"));
     }
     
     @Test
     public void firstLevelStructureTest() {
         DocumentContentStructure firstLevelStruct = structure.getParts().get(1);
-        assertNotNull(firstLevelStruct.getHeader());
+        assertNotNull(firstLevelStruct.getHeading());
         
-        assertEquals(1, firstLevelStruct.getHeader().getLevel());
-        assertEquals("2. DATA MODELING AND MAPPING", firstLevelStruct.getHeader().getText());
-        assertEquals(firstLevelStruct, firstLevelStruct.getHeader().getContentStructure());
+        assertEquals(1, firstLevelStruct.getHeading().getLevel());
+        assertEquals("2. DATA MODELING AND MAPPING", firstLevelStruct.getHeading().getText());
+        assertEquals(firstLevelStruct, firstLevelStruct.getHeading().getContentStructure());
         assertEquals(firstLevelStruct.getParent(), structure);
         
         assertEquals(3, firstLevelStruct.getParts().size());
@@ -87,19 +87,19 @@ public class DocumentContentStructureTest {
         assertEquals(3, firstLevelStruct.getAllParagraphCount());
         assertEquals(3, firstLevelStruct.getAllParagraphTexts().size());
         
-        assertEquals(4, firstLevelStruct.getHeaders().size());
-        assertEquals(4, firstLevelStruct.getAllHeaderTexts().size());
-        assertEquals("2.1 Lined Data", firstLevelStruct.getAllHeaderTexts().get(1));
-        assertEquals(4, firstLevelStruct.getAllHeaderCount());
+        assertEquals(4, firstLevelStruct.getHeadings().size());
+        assertEquals(4, firstLevelStruct.getAllHeadingTexts().size());
+        assertEquals("2.1 Lined Data", firstLevelStruct.getAllHeadingTexts().get(1));
+        assertEquals(4, firstLevelStruct.getAllHeadingsCount());
         
-        assertTrue(firstLevelStruct.containsHeaderText("2.3 Dublin Core"));
-        assertTrue(firstLevelStruct.containsHeaderFirstLineText("2.3 Dublin Core"));
+        assertTrue(firstLevelStruct.containsHeadingText("2.3 Dublin Core"));
+        assertTrue(firstLevelStruct.containsHeadingFirstLineText("2.3 Dublin Core"));
         
-        assertFalse(firstLevelStruct.containsHeaderText("test"));
-        assertFalse(firstLevelStruct.containsHeaderFirstLineText("test"));
+        assertFalse(firstLevelStruct.containsHeadingText("test"));
+        assertFalse(firstLevelStruct.containsHeadingFirstLineText("test"));
         
-        assertNotNull(structure.getPrevHeader(firstLevelStruct.getHeader()));
-        assertEquals("1. BACKGROUND", structure.getPrevHeader(firstLevelStruct.getHeader()).getText());
+        assertNotNull(structure.getPreviousHeading(firstLevelStruct.getHeading()));
+        assertEquals("1. BACKGROUND", structure.getPreviousHeading(firstLevelStruct.getHeading()).getText());
     }
 
 }

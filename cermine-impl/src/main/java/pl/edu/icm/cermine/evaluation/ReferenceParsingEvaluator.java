@@ -51,21 +51,14 @@ public class ReferenceParsingEvaluator {
         File testFile = new File(args[0]);
 
         List<Citation> testCitations;
-        
-        InputStream testIS = null;
-        try {
-            testIS = new FileInputStream(testFile);
+        try (InputStream testIS = new FileInputStream(testFile)) {
             InputSource testSource = new InputSource(testIS);
             testCitations = NlmCitationExtractor.extractCitations(testSource);
-        } finally {
-            if (testIS != null) {
-                testIS.close();
-            }
         }
 
-        List<BibEntry> testEntries = new ArrayList<BibEntry>();
+        List<BibEntry> testEntries = new ArrayList<>();
 
-        Map<String, Result> results = new HashMap<String, Result>();
+        Map<String, Result> results = new HashMap<>();
 
         for (Citation c : testCitations) {
             BibEntry entry = CitationUtils.citationToBibref(c);
@@ -113,7 +106,7 @@ public class ReferenceParsingEvaluator {
         for (Entry<String, Result> entry : results.entrySet()) {
             System.out.println(entry.getKey() + ": ");
             System.out.println("    "+entry.getValue());
-            System.out.println("    Precission = " + ((double) entry.getValue().success * 100.0 / (double) entry.getValue().totalExtr));
+            System.out.println("    Precision = " + ((double) entry.getValue().success * 100.0 / (double) entry.getValue().totalExtr));
             System.out.println("    Recall = " + ((double) entry.getValue().success * 100.0 / (double) entry.getValue().totalOrig));
             System.out.println("");
         }

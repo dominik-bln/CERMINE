@@ -189,14 +189,11 @@ public class ContentExtractorTest {
     
     @Test
     public void getNLMContentTest() throws AnalysisException, JDOMException, IOException, SAXException {
-        InputStream testStream = this.getClass().getResourceAsStream(TEST_PDF_2);
         Element testContent;
-        try {
+        try (InputStream testStream = this.getClass().getResourceAsStream(TEST_PDF_2)){
             extractor.uploadPDF(testStream);
             testContent = extractor.getNLMContent();
-        } finally {
-            testStream.close();
-        }
+        } 
         
         InputStream expStream = this.getClass().getResourceAsStream(EXP_CONTENT_2);
         InputStreamReader expReader = new InputStreamReader(expStream);

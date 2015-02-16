@@ -29,6 +29,7 @@ import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import pl.edu.icm.cermine.exception.AnalysisException;
+import pl.edu.icm.cermine.exception.CermineException;
 import pl.edu.icm.cermine.structure.model.BxDocument;
 
 /**
@@ -38,12 +39,16 @@ import pl.edu.icm.cermine.structure.model.BxDocument;
  *
  * @author Dominika Tkaczyk
  */
-public class PdfRawTextWithLabelsExtractor {
-    
-    ComponentConfiguration conf;
+public class PdfRawTextWithLabelsExtractor extends AbstractExtractor<InputStream, Element>{
     
     public PdfRawTextWithLabelsExtractor() throws AnalysisException {
-        conf = new ComponentConfiguration();
+        super();
+    }
+    
+    
+    @Override
+    public Element extract(InputStream input) throws CermineException {
+        return this.extractRawText(input);
     }
     
     /**
@@ -54,7 +59,7 @@ public class PdfRawTextWithLabelsExtractor {
      * @throws AnalysisException 
      */
     public Element extractRawText(InputStream stream) throws AnalysisException {
-        return ExtractionUtils.extractRawTextWithLabels(conf, stream);
+        return ExtractionUtils.extractRawTextWithLabels(config, stream);
     }
     
     /**
@@ -65,15 +70,7 @@ public class PdfRawTextWithLabelsExtractor {
      * @throws AnalysisException 
      */
     public Element extractRawText(BxDocument document) throws AnalysisException {
-        return ExtractionUtils.extractRawTextWithLabels(conf, document);
-    }
-
-    public ComponentConfiguration getConf() {
-        return conf;
-    }
-
-    public void setConf(ComponentConfiguration conf) {
-        this.conf = conf;
+        return ExtractionUtils.extractRawTextWithLabels(config, document);
     }
     
     public static void main(String[] args) throws ParseException, IOException {
@@ -94,20 +91,20 @@ public class PdfRawTextWithLabelsExtractor {
         
         String path = parser.getPath();
         String extension = parser.getTextExtension();
-        PdfNLMContentExtractor.THREADS_NUMBER = parser.getThreadsNumber();
+        Cermine.THREADS_NUMBER = parser.getThreadsNumber();
  
         File file = new File(path);
         if (file.isFile()) {
             try {
                 PdfRawTextWithLabelsExtractor extractor = new PdfRawTextWithLabelsExtractor();
-                parser.updateMetadataModel(extractor.getConf());
-                parser.updateInitialModel(extractor.getConf());
+                parser.updateMetadataModel(extractor.getConfiguration());
+                parser.updateInitialModel(extractor.getConfiguration());
                 InputStream in = new FileInputStream(file);
                 Element result = extractor.extractRawText(in);
                 XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
                 System.out.println(outputter.outputString(result));
             } catch (AnalysisException ex) {
-                ex.printStackTrace();
+                ex.printStackTrace(System.out);
             }
         } else {
         
@@ -128,11 +125,11 @@ public class PdfRawTextWithLabelsExtractor {
  
                 try {
                     PdfRawTextWithLabelsExtractor extractor = new PdfRawTextWithLabelsExtractor();
-                    parser.updateMetadataModel(extractor.getConf());
-                    parser.updateInitialModel(extractor.getConf());
+                    parser.updateMetadataModel(extractor.getConfiguration());
+                    parser.updateInitialModel(extractor.getConfiguration());
 
                     InputStream in = new FileInputStream(pdf);
-                    BxDocument doc = ExtractionUtils.extractStructure(extractor.getConf(), in);
+                    BxDocument doc = extractor.extractBasicStructure(in);
                     Element result = extractor.extractRawText(doc);
 
                     long end = System.currentTimeMillis();
@@ -143,8 +140,8 @@ public class PdfRawTextWithLabelsExtractor {
                         System.out.println("Cannot create new file!");
                     }
                     FileUtils.writeStringToFile(xmlF, outputter.outputString(result));            
-                } catch (AnalysisException ex) {
-                   ex.printStackTrace();
+                } catch (CermineException ex) {
+                   ex.printStackTrace(System.out);
                 }
                 
                 i++;

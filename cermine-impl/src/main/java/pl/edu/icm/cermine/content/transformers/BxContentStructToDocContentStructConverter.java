@@ -23,7 +23,7 @@ import java.util.List;
 import pl.edu.icm.cermine.content.model.BxDocContentStructure;
 import pl.edu.icm.cermine.content.model.BxDocContentStructure.BxDocContentPart;
 import pl.edu.icm.cermine.content.model.DocumentContentStructure;
-import pl.edu.icm.cermine.content.model.DocumentHeader;
+import pl.edu.icm.cermine.content.model.DocumentHeading;
 import pl.edu.icm.cermine.content.model.DocumentParagraph;
 import pl.edu.icm.cermine.exception.TransformationException;
 import pl.edu.icm.cermine.tools.transformers.ModelToModelConverter;
@@ -48,7 +48,7 @@ public class BxContentStructToDocContentStructConverter implements ModelToModelC
         }
 
         if (level > 0) {
-            dcs.setHeader(new DocumentHeader(level, contentParts.get(0).getCleanHeaderText(), dcs));
+            dcs.setHeading(new DocumentHeading(level, contentParts.get(0).getCleanHeaderText(), dcs));
             for (String contentText : contentParts.get(0).getCleanContentTexts()) {
                 dcs.addParagraph(new DocumentParagraph(contentText, dcs));
             }

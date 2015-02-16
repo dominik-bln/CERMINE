@@ -32,20 +32,12 @@ import pl.edu.icm.cermine.structure.model.BxDocument;
  */
 public abstract class AbstractExtractor<InputType, OutputType> {
 
-    protected ComponentConfiguration configuration = new ComponentConfiguration();
+    protected ComponentConfiguration config = new ComponentConfiguration();
 
     public AbstractExtractor() throws AnalysisException {
-        this.configuration = new ComponentConfiguration();
+        this.config = new ComponentConfiguration();
     }
-
-    public ComponentConfiguration getConfiguration() {
-        return configuration;
-    }
-
-    public void setConfiguration(ComponentConfiguration conf) {
-        this.configuration = conf;
-    }
-    
+        
     /**
      * Performs the task of extracting data from the given InputType and answers with the 
      * defined OutputType.
@@ -56,6 +48,14 @@ public abstract class AbstractExtractor<InputType, OutputType> {
      */
     public abstract OutputType extract(InputType input) throws CermineException;
     
+    public ComponentConfiguration getConfiguration() {
+        return config;
+    }
+
+    public void setConfiguration(ComponentConfiguration conf) {
+        this.config = conf;
+    }
+    
     /**
      * Creates an initial document from the given input stream.
      * 
@@ -63,12 +63,13 @@ public abstract class AbstractExtractor<InputType, OutputType> {
      * @return The representation of the given input stream.
      * @throws CermineException 
      * 
-     * @todo this shouldn't stay here, but for now during refactoring it makes sense
+     * @todo this probably shouldn't stay here, depending on how the architecture ends up
+     * but for now during refactoring it makes sense for removing the static methods
      */
     protected BxDocument extractBasicStructure(InputStream stream) throws CermineException{
-        BxDocument doc = configuration.characterExtractor.extractCharacters(stream);
-        doc = configuration.documentSegmenter.segmentDocument(doc);
-        doc = configuration.readingOrderResolver.resolve(doc);
-        return configuration.initialClassifier.classifyZones(doc);
+        BxDocument doc = config.characterExtractor.extractCharacters(stream);
+        doc = config.documentSegmenter.segmentDocument(doc);
+        doc = config.readingOrderResolver.resolve(doc);
+        return config.initialClassifier.classifyZones(doc);
     }
 }

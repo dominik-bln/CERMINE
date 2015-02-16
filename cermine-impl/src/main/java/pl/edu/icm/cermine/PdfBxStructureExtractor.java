@@ -23,7 +23,7 @@ import java.util.Collection;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
 import pl.edu.icm.cermine.exception.AnalysisException;
-import pl.edu.icm.cermine.exception.TransformationException;
+import pl.edu.icm.cermine.exception.CermineException;
 import pl.edu.icm.cermine.structure.model.BxDocument;
 import pl.edu.icm.cermine.structure.transformers.BxDocumentToTrueVizWriter;
 
@@ -33,31 +33,22 @@ import pl.edu.icm.cermine.structure.transformers.BxDocumentToTrueVizWriter;
  *
  * @author Dominika Tkaczyk
  */
-public class PdfBxStructureExtractor {
-
-    private ComponentConfiguration conf;
+public class PdfBxStructureExtractor extends AbstractExtractor<InputStream, BxDocument>{
 
     public PdfBxStructureExtractor() throws AnalysisException {
-        conf = new ComponentConfiguration();
+        super();
     }
     
     /**
      * Extracts the geometric structure from a PDF file and stores it as BxDocument.
      * 
-     * @param stream PDF stream
+     * @param input PDF stream
      * @return BxDocument object storing the geometric structure
      * @throws AnalysisException 
      */
-    public BxDocument extractStructure(InputStream stream) throws AnalysisException {
-        return ExtractionUtils.extractStructure(conf, stream);
-    }
-
-    public ComponentConfiguration getConf() {
-        return conf;
-    }
-
-    public void setConf(ComponentConfiguration conf) {
-        this.conf = conf;
+    @Override
+    public BxDocument extract(InputStream input) throws CermineException {
+        return this.extractBasicStructure(input);
     }
     
     public static void main(String[] args) throws ParseException, IOException {
@@ -78,7 +69,7 @@ public class PdfBxStructureExtractor {
         
         String path = parser.getPath();
         String strExtension = parser.getBxExtension();
-        PdfNLMContentExtractor.THREADS_NUMBER = parser.getThreadsNumber();
+        Cermine.THREADS_NUMBER = parser.getThreadsNumber();
  
         File file = new File(path);
         Collection<File> files = FileUtils.listFiles(file, new String[]{"pdf"}, true);
@@ -98,19 +89,19 @@ public class PdfBxStructureExtractor {
  
             try {
                 PdfBxStructureExtractor extractor = new PdfBxStructureExtractor();
-                parser.updateMetadataModel(extractor.getConf());
-                parser.updateInitialModel(extractor.getConf());
+                parser.updateMetadataModel(extractor.getConfiguration());
+                parser.updateInitialModel(extractor.getConfiguration());
 
                 InputStream in = new FileInputStream(pdf);
-                BxDocument doc = ExtractionUtils.extractStructure(extractor.getConf(), in);
-                doc = extractor.getConf().getMetadataClassifier().classifyZones(doc);
+                BxDocument doc = extractor.extract(in);
+                doc = extractor.getConfiguration().getMetadataClassifier().classifyZones(doc);
 
                 long end = System.currentTimeMillis();
                 elapsed = (end - start) / 1000F;
             
                 BxDocumentToTrueVizWriter writer = new BxDocumentToTrueVizWriter();
                 writer.write(new FileWriter(strF), doc.getPages());
-            } catch (AnalysisException | TransformationException ex) {
+            } catch (CermineException ex) {
                ex.printStackTrace();
             }
                 

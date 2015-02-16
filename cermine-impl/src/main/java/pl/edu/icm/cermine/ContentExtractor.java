@@ -280,7 +280,7 @@ public class ContentExtractor {
         String extension = parser.getNLMExtension();
         boolean extractStr = parser.extractStructure();
         String strExtension = parser.getBxExtension();
-        PdfNLMContentExtractor.THREADS_NUMBER = parser.getThreadsNumber();
+        Cermine.THREADS_NUMBER = parser.getThreadsNumber();
  
         File file = new File(path);
         if (file.isFile()) {
@@ -336,9 +336,7 @@ public class ContentExtractor {
                         File strF = new File(pdf.getPath().replaceAll("pdf$", strExtension));
                         writer.write(new FileWriter(strF), doc.getPages());
                     }
-                } catch (AnalysisException ex) {
-                   ex.printStackTrace();
-                } catch (TransformationException ex) {
+                } catch (AnalysisException | TransformationException ex) {
                    ex.printStackTrace();
                 }
                 

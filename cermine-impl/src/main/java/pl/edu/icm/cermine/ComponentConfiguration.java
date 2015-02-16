@@ -25,7 +25,7 @@ import pl.edu.icm.cermine.bibref.BibReferenceParser;
 import pl.edu.icm.cermine.bibref.model.BibEntry;
 import pl.edu.icm.cermine.content.cleaning.ContentCleaner;
 import pl.edu.icm.cermine.content.filtering.ContentFilter;
-import pl.edu.icm.cermine.content.headers.ContentHeadersExtractor;
+import pl.edu.icm.cermine.content.headings.ContentHeadersExtractor;
 import pl.edu.icm.cermine.exception.AnalysisException;
 import pl.edu.icm.cermine.metadata.MetadataExtractor;
 import pl.edu.icm.cermine.metadata.model.DocumentAffiliation;

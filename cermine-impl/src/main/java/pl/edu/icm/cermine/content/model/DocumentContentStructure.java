@@ -22,23 +22,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * A representation of the semantic structure of a document.
+ * 
  * @author Dominika Tkaczyk
  */
 public class DocumentContentStructure {
 
-    private DocumentHeader header;
-    private List<DocumentParagraph> paragraphs;
-    private List<DocumentContentStructure> parts = new ArrayList<DocumentContentStructure>();
+    private DocumentHeading header;
+    private final List<DocumentParagraph> paragraphs;
+    private final List<DocumentContentStructure> parts;
     private DocumentContentStructure parent;
-
     
     public DocumentContentStructure() {
-        parts = new ArrayList<DocumentContentStructure>();
-        paragraphs = new ArrayList<DocumentParagraph>();
+        parts = new ArrayList<>();
+        paragraphs = new ArrayList<>();
     }
-
-    //parent
 
     public DocumentContentStructure getParent() {
         return parent;
@@ -51,65 +49,54 @@ public class DocumentContentStructure {
         }
     }
     
-    //parts
-    
     public List<DocumentContentStructure> getParts() {
         return parts;
-    }
-
-    public void setParts(List<DocumentContentStructure> parts) {
-        this.parts = parts;
-        for (DocumentContentStructure dcp : parts) {
-            dcp.parent = this;
-        }
     }
     
     public void addPart(DocumentContentStructure part) {
         parts.add(part);
     }
     
-    //headers
-    
-    public DocumentHeader getHeader() {
+    public DocumentHeading getHeading() {
         return header;
     }
 
-    public void setHeader(DocumentHeader header) {
+    public void setHeading(DocumentHeading header) {
         this.header = header;
     }
     
-    public List<String> getAllHeaderTexts() {
-        List<String> headers = new ArrayList<String>();
+    public List<String> getAllHeadingTexts() {
+        List<String> headers = new ArrayList<>();
         if (header != null) {
             headers.add(header.getText());
         }
         for (DocumentContentStructure part : parts) {
-            headers.addAll(part.getAllHeaderTexts());
+            headers.addAll(part.getAllHeadingTexts());
         }
         return headers;
     }
     
-    public int getAllHeaderCount() {
+    public int getAllHeadingsCount() {
         int sum = (header == null) ? 0 : 1;
         for (DocumentContentStructure part : parts) {
-            sum += part.getAllHeaderCount();
+            sum += part.getAllHeadingsCount();
         }
         return sum;
     }
         
-    public boolean containsHeaderText(String headerText) {
+    public boolean containsHeadingText(String headerText) {
         if (header != null && headerText.equals(header.getText())) {
             return true;
         }
         for (DocumentContentStructure part : parts) {
-            if (part.containsHeaderText(headerText)) {
+            if (part.containsHeadingText(headerText)) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean containsHeaderFirstLineText(String lineText) {
+    public boolean containsHeadingFirstLineText(String lineText) {
         if (header != null) {
             String[] lines = header.getText().split("\n");
             if (lineText.equals(lines[0])) {
@@ -117,43 +104,43 @@ public class DocumentContentStructure {
             }
         }
         for (DocumentContentStructure part : parts) {
-            if (part.containsHeaderFirstLineText(lineText)) {
+            if (part.containsHeadingFirstLineText(lineText)) {
                 return true;
             }
         }
         return false;
     }
   
-    public DocumentHeader getPrevHeader(DocumentHeader header) {
+    public DocumentHeading getPreviousHeading(DocumentHeading header) {
         DocumentContentStructure prev = null;
         for (DocumentContentStructure part : parts) {
-            if (part.containsHeader(header)) {
-                return prev == null ? null : prev.getHeader();
+            if (part.containsHeading(header)) {
+                return prev == null ? null : prev.getHeading();
             }
             prev = part;
         }
         return null;
     }
     
-    public boolean containsHeader(DocumentHeader header) {
+    public boolean containsHeading(DocumentHeading header) {
         if (header.equals(this.header)) {
             return true;
         }
         for (DocumentContentStructure part : parts) {
-            if (part.containsHeader(header)) {
+            if (part.containsHeading(header)) {
                 return true;
             }
         }
         return false;
     }
 
-    public List<DocumentHeader> getHeaders() {
-        List<DocumentHeader> headers = new ArrayList<DocumentHeader>();
+    public List<DocumentHeading> getHeadings() {
+        List<DocumentHeading> headers = new ArrayList<>();
         if (header != null) {
             headers.add(header);
         }
         for (DocumentContentStructure part : parts) {
-            headers.addAll(part.getHeaders());
+            headers.addAll(part.getHeadings());
         }
         return headers;
     }
@@ -165,7 +152,7 @@ public class DocumentContentStructure {
     }
     
     public List<String> getAllParagraphTexts() {
-        List<String> pars = new ArrayList<String>();
+        List<String> pars = new ArrayList<>();
         for (DocumentParagraph p : paragraphs) {
             pars.add(p.getText());
         }
@@ -177,7 +164,7 @@ public class DocumentContentStructure {
     }
     
     public List<DocumentParagraph> getAllParagraphs() {
-        List<DocumentParagraph> pars = new ArrayList<DocumentParagraph>();
+        List<DocumentParagraph> pars = new ArrayList<>();
         if (paragraphs != null) {
             pars.addAll(this.paragraphs);
         }

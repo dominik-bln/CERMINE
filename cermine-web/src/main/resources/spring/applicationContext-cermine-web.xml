@@ -13,24 +13,20 @@
         <property name="locations">
             <list>
                 <value>classpath:cermine-web.default.properties</value>
-                <!-- <value>file:///${user.home}/.icm/sedno-util.local.properties</value> -->
             </list>
         </property>
         <property name="ignoreResourceNotFound" value="true" />
         <property name="ignoreUnresolvablePlaceholders" value="false" />
     </bean>  
     
-    <!-- 
-    <mvc:resources mapping="/static/**" location="/WEB-INF/static/" />
-    -->
-    
-    <context:component-scan base-package="pl.edu.icm.cermine"  scoped-proxy="interfaces"/>
+    <context:component-scan base-package="pl.edu.icm.cermine.web"  scoped-proxy="interfaces"/>
     
     <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
     
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
     
-    <bean id="dummyValidator" class="pl.edu.icm.cermine.web.controller.DummyValidator"/> 
+    <!-- http://w3facility.org/question/spring-mvc-issues-with-javax-validation/ -->
+    <bean id="dummyValidator" class="pl.edu.icm.cermine.web.DummyValidator"/> 
     <mvc:annotation-driven validator="dummyValidator" />
     
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">

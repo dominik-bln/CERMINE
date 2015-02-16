@@ -26,7 +26,7 @@ import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import pl.edu.icm.cermine.content.model.DocumentContentStructure;
-import pl.edu.icm.cermine.content.model.DocumentHeader;
+import pl.edu.icm.cermine.content.model.DocumentHeading;
 import pl.edu.icm.cermine.content.model.DocumentParagraph;
 import pl.edu.icm.cermine.exception.TransformationException;
 import pl.edu.icm.cermine.tools.transformers.ModelToFormatWriter;
@@ -58,8 +58,8 @@ public class DocContentStructToHTMLWriter implements ModelToFormatWriter<Documen
     
     private Element toHTML(DocumentContentStructure dcs) {
         Element element = new Element("html");
-        if (dcs.getHeader() != null) {
-            element.addContent(toHTML(dcs.getHeader()));
+        if (dcs.getHeading() != null) {
+            element.addContent(toHTML(dcs.getHeading()));
         }
         for (DocumentParagraph paragraph : dcs.getParagraphs()) {
             element.addContent(toHTML(paragraph));
@@ -70,7 +70,7 @@ public class DocContentStructToHTMLWriter implements ModelToFormatWriter<Documen
         return element;
     }
 
-    public Element toHTML(DocumentHeader header) {
+    public Element toHTML(DocumentHeading header) {
         Element element = new Element("H" + header.getLevel());
         element.setText(header.getText());
         return element;

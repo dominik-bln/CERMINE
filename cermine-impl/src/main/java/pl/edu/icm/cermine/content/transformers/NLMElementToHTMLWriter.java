@@ -64,19 +64,23 @@ public class NLMElementToHTMLWriter implements ModelToFormatWriter<Element> {
     }
     
     private List<Element> toHTML(Element section, int level) {
-        List<Element> elements = new ArrayList<Element>();
+        List<Element> elements = new ArrayList<>();
         List<Element> children = section.getChildren();
         for (Element child : children) {
-            if ("title".equals(child.getName())) {
-                Element element = new Element("H"+level);
-                element.setText(child.getText());
-                elements.add(element);
-            } else if ("p".equals(child.getName())) {
-                Element el = new Element("p");
-                el.setText(child.getText());
-                elements.add(el);
-            } else if ("sec".equals(child.getName())) {
-                elements.addAll(toHTML(child, level+1));
+            switch (child.getName()) {
+                case "title":
+                    Element element = new Element("H"+level);
+                    element.setText(child.getText());
+                    elements.add(element);
+                    break;
+                case "p":
+                    Element el = new Element("p");
+                    el.setText(child.getText());
+                    elements.add(el);
+                    break;
+                case "sec":
+                    elements.addAll(toHTML(child, level+1));
+                    break;
             }
         }
         return elements;

@@ -29,7 +29,7 @@ import pl.edu.icm.cermine.content.cleaning.ContentCleaner;
 import pl.edu.icm.cermine.content.model.BxDocContentStructure;
 import pl.edu.icm.cermine.content.model.DocumentContentStructure;
 import pl.edu.icm.cermine.content.transformers.BxContentStructToDocContentStructConverter;
-import pl.edu.icm.cermine.content.transformers.DocContentStructToNLMElementConverter;
+import pl.edu.icm.cermine.content.transformers.DocContentStructToJatsBodyConverter;
 import pl.edu.icm.cermine.exception.AnalysisException;
 import pl.edu.icm.cermine.exception.TransformationException;
 import pl.edu.icm.cermine.metadata.model.DocumentAffiliation;
@@ -165,7 +165,7 @@ public class ExtractionUtils {
             throws AnalysisException {
         try {
             ModelToModelConverter<DocumentContentStructure, Element> converter
-                    = new DocContentStructToNLMElementConverter();
+                    = new DocContentStructToJatsBodyConverter();
             DocumentContentStructure struct = extractText(conf, document);
             return converter.convert(struct);
         } catch (TransformationException ex) {

@@ -30,12 +30,11 @@ public final class BxDocument implements Serializable {
 
     private static final long serialVersionUID = -4826783896245709986L;
 
-    /** list of document's pages */
-    private final List<BxPage> pages = new ArrayList<BxPage>();
+    private final List<BxPage> pages = new ArrayList<>();
     
     private String filename = null;
 
-    private int curPageNumber = 0;
+    private int currentPageNumber = 0;
 
     public String getFilename() {
 		return filename;
@@ -52,7 +51,7 @@ public final class BxDocument implements Serializable {
     public BxDocument setPages(Collection<BxPage> pages) {
         if (pages != null) {
             this.pages.clear();
-            curPageNumber = 0;
+            currentPageNumber = 0;
             for (BxPage page : pages) {
                 addPage(page);
             }
@@ -62,7 +61,7 @@ public final class BxDocument implements Serializable {
 
     public BxDocument addPage(BxPage page) {
         if (page != null) {
-            page.setId(Integer.toString(this.curPageNumber++));
+            page.setId(Integer.toString(this.currentPageNumber++));
             page.setParent(this);
             this.pages.add(page);
         }
@@ -96,7 +95,7 @@ public final class BxDocument implements Serializable {
      * a ReadingOrderResolver was run on the original document.
      */
     public List<BxZone> asZones() {
-    	List<BxZone> ret = new ArrayList<BxZone>();
+    	List<BxZone> ret = new ArrayList<>();
     	for(BxPage page: asPages()) {
     		ret.addAll(page.getZones());
     	}
@@ -109,7 +108,7 @@ public final class BxDocument implements Serializable {
      * a ReadingOrderResolver was run on the original document.
      */
     public List<BxLine> asLines() {
-    	List<BxLine> ret = new ArrayList<BxLine>();
+    	List<BxLine> ret = new ArrayList<>();
     	for(BxZone zone: asZones()) {
     		ret.addAll(zone.getLines());
     	}
@@ -122,8 +121,8 @@ public final class BxDocument implements Serializable {
      * a ReadingOrderResolver was run on the original document.
      */
     public List<BxWord> asWords() {
-    	List<BxWord> ret = new ArrayList<BxWord>();
-    	for(BxLine line: asLines()) {
+    	List<BxWord> ret = new ArrayList<>();
+    	for(BxLine line: this.asLines()) {
     		ret.addAll(line.getWords());
     	}
     	return ret;
@@ -135,8 +134,8 @@ public final class BxDocument implements Serializable {
      * a ReadingOrderResolver was run on the original document.
      */
     public List<BxChunk> asChunks() {
-    	List<BxChunk> ret = new ArrayList<BxChunk>();
-    	for(BxWord word: asWords()) {
+    	List<BxChunk> ret = new ArrayList<>();
+    	for(BxWord word: this.asWords()) {
     		ret.addAll(word.getChunks());
     	}
     	return ret;

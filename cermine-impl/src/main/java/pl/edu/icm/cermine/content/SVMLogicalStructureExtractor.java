@@ -21,7 +21,7 @@ package pl.edu.icm.cermine.content;
 import java.io.BufferedReader;
 import pl.edu.icm.cermine.content.cleaning.ContentCleaner;
 import pl.edu.icm.cermine.content.filtering.SVMContentFilter;
-import pl.edu.icm.cermine.content.headers.SVMContentHeadersExtractor;
+import pl.edu.icm.cermine.content.headings.SVMContentHeadersExtractor;
 import pl.edu.icm.cermine.content.transformers.BxContentStructToDocContentStructConverter;
 import pl.edu.icm.cermine.exception.AnalysisException;
 

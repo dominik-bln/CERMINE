@@ -35,13 +35,13 @@ public class BxDocumentBibReferences {
     private static final int MAX_TITLE_LENGTH = 30;
     
     /** A list of references' lines */
-    private List<BxLine> lines = new ArrayList<BxLine>();
+    private List<BxLine> lines = new ArrayList<>();
 
     /** A map associating references' line with their zones */
-    private Map<BxLine, BxZone> lineZones = new HashMap<BxLine, BxZone>();
+    private final Map<BxLine, BxZone> lineZones = new HashMap<>();
 
     /** A map associating references' lines with their labels */
-    private Map<BxLine, BibReferenceLineLabel> lineLabels = new HashMap<BxLine, BibReferenceLineLabel>();
+    private final Map<BxLine, BibReferenceLineLabel> lineLabels = new HashMap<>();
 
     public void addZone(BxZone zone) {
         for (BxLine line : zone.getLines()) {

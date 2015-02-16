@@ -29,8 +29,8 @@ import java.util.List;
  */
 public class FeatureVector {
 
-    private List<String> names = new ArrayList<String>();
-    private List<Double> values = new ArrayList<Double>();
+    private List<String> names = new ArrayList<>();
+    private List<Double> values = new ArrayList<>();
 
     
     public int size() {
@@ -107,8 +107,8 @@ public class FeatureVector {
 
     public FeatureVector copy() {
         FeatureVector ret = new FeatureVector();
-        ret.names = new ArrayList<String>(names);
-        ret.values = new ArrayList<Double>(values);
+        ret.names = new ArrayList<>(names);
+        ret.values = new ArrayList<>(values);
         return ret;
 	}
 	

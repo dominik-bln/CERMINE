@@ -50,7 +50,7 @@ public class PdfNLMMetadataExtractor extends AbstractExtractor<InputStream, Elem
     public Element extract(InputStream input) throws CermineException {
         BxDocument doc = this.extractBasicStructure(input);
         DocumentMetadataToNLMElementConverter converter = new DocumentMetadataToNLMElementConverter();
-        return converter.convert(ExtractionUtils.extractMetadata(this.configuration, doc));
+        return converter.convert(ExtractionUtils.extractMetadata(this.config, doc));
     }
     
 }

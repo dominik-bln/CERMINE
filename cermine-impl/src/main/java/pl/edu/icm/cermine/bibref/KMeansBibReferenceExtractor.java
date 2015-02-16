@@ -46,7 +46,7 @@ public class KMeansBibReferenceExtractor implements BibReferenceExtractor {
     public static final int MAX_REFS_COUNT = 1000;
     
     private static final FeatureVectorBuilder<BxLine, BxDocumentBibReferences> VECTOR_BUILDER =
-                new FeatureVectorBuilder<BxLine, BxDocumentBibReferences>();
+                new FeatureVectorBuilder<>();
     static {
         VECTOR_BUILDER.setFeatureCalculators(Arrays.<FeatureCalculator<BxLine, BxDocumentBibReferences>>asList(
                 new PrevEndsWithDotFeature(),
@@ -72,8 +72,8 @@ public class KMeansBibReferenceExtractor implements BibReferenceExtractor {
         BxDocumentBibReferences documentReferences = BibRefExtractionUtils.extractBibRefLines(document);
         documentReferences.limit(MAX_REF_LINES_COUNT);
         
-        List<String> lines = new ArrayList<String>();
-        List<FeatureVector> instances = new ArrayList<FeatureVector>();
+        List<String> lines = new ArrayList<>();
+        List<FeatureVector> instances = new ArrayList<>();
         FeatureVectorDistanceMetric metric = new FeatureVectorEuclideanMetric();
         FeatureVector farthestInstance = null;
         double farthestDistance = 0;
@@ -111,7 +111,7 @@ public class KMeansBibReferenceExtractor implements BibReferenceExtractor {
             firstInstanceClusterNum = 1;
         }
         
-        List<String> references = new ArrayList<String>();
+        List<String> references = new ArrayList<>();
         String actRef = "";
         for (int i = 0; i < lines.size(); i++) {
             if (clusters[firstInstanceClusterNum].contains(instances.get(i))) {

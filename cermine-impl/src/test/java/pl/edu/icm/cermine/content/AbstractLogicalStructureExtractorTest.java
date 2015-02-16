@@ -77,7 +77,7 @@ public abstract class AbstractLogicalStructureExtractorTest {
             System.out.println(i);
             DocumentContentStructure hdrs = testHeaderStructures.get(i);
             
-            headerCount += hdrs.getAllHeaderCount();
+            headerCount += hdrs.getAllHeadingsCount();
 
             System.out.println();
             System.out.println("ORIGINAL: ");
@@ -88,10 +88,10 @@ public abstract class AbstractLogicalStructureExtractorTest {
             System.out.println("EXTRACTED:");
             extractedHdrs.printHeaders();
             
-            recognizedHeaderCount += extractedHdrs.getAllHeaderCount();
+            recognizedHeaderCount += extractedHdrs.getAllHeadingsCount();
             
-            for (String header : hdrs.getAllHeaderTexts()) {
-                if (extractedHdrs.containsHeaderText(header)) {
+            for (String header : hdrs.getAllHeadingTexts()) {
+                if (extractedHdrs.containsHeadingText(header)) {
                     goodHeaderCount++;
                 } else {
                     System.out.println("NOT EXTR: " + header);
