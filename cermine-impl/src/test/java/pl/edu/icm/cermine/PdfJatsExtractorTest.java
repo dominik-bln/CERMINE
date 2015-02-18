@@ -19,17 +19,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import static junit.framework.Assert.assertEquals;
-import org.custommonkey.xmlunit.DetailedDiff;
 import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.Difference;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
+import org.xml.sax.SAXException;
 import pl.edu.icm.cermine.content.references.InTextReference;
 import pl.edu.icm.cermine.exception.AnalysisException;
 import pl.edu.icm.cermine.exception.CermineException;
@@ -41,6 +41,7 @@ import pl.edu.icm.cermine.exception.CermineException;
 public class PdfJatsExtractorTest {
 
     static final private String TEST_FILE = "/pl/edu/icm/cermine/test2.pdf";
+    static final private String TEST_FILE2 = "/pl/edu/icm/cermine/test4.pdf";
     static final private String EXP_FILE = "/pl/edu/icm/cermine/test2-cont_with_xref.xml";
 
     private PdfJatsExtractor extractor;
@@ -51,44 +52,50 @@ public class PdfJatsExtractorTest {
     }
 
     @Test
-    public void contentExtractionTest() throws Exception {
-        Element testContent;
-        try (InputStream testStream = this.getClass().getResourceAsStream(TEST_FILE)) {
-            testContent = extractor.extract(testStream);
-        }
+    public void testContentExtractionIsSimilarToPreparedXML() throws Exception {
+        Element testContent = this.callExtractForFile(TEST_FILE);
+        Element expContent = this.loadXMLFromFile(EXP_FILE);
+        Diff diff = this.prepareXMLDiff(expContent, testContent);
 
-        SAXBuilder saxBuilder = new SAXBuilder("org.apache.xerces.parsers.SAXParser");
-        Document dom;
-        try (InputStream expStream = this.getClass().getResourceAsStream(EXP_FILE);
-            InputStreamReader expReader = new InputStreamReader(expStream);) {
-            dom = saxBuilder.build(expReader);
-        }
-        Element expContent = dom.getRootElement();
-
-        XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
-        Diff diff = new Diff(outputter.outputString(expContent), outputter.outputString(testContent));
-        
-        System.out.println(outputter.outputString(testContent));
         assertTrue(diff.similar());
     }
 
     @Test
-    public void testCorrectAmountOfInTextReferencesIsExtracted() throws CermineException, IOException {
-        try (InputStream testStream = this.getClass().getResourceAsStream(TEST_FILE)) {
-            // call extract so that the in-text references are accessible
-            extractor.extract(testStream);
-        }
+    public void testCorrectAmountOfInTextReferencesIsExtractedForTestPDF() throws CermineException, IOException {
+        this.callExtractForFile(TEST_FILE);
 
         List<InTextReference> references = extractor.getInTextReferences();
-        
-        String result = "";
-        for (InTextReference reference : references) {
-            result += reference.getParentParagraph().getText().substring(
-                reference.getStartPosition(), reference.getEndPosition());
-        }
-
-        System.out.println(result);
-        
         assertEquals(references.size(), 17);
+    }
+    
+    @Test
+    public void testNameYearReferencesGetExtracted() throws CermineException, IOException {
+        this.callExtractForFile(TEST_FILE2);
+        List<InTextReference> references = extractor.getInTextReferences();
+        
+        // 15 is probably not final, but is what gets extracted correctly right now.
+        assertTrue(references.size()>=15);
+    }
+    
+    private Element callExtractForFile(String file) throws CermineException, IOException{
+        try (InputStream testStream = this.getClass().getResourceAsStream(file)) {
+            // call extract so that the in-text references are accessible
+            return extractor.extract(testStream);
+        }
+    }
+    
+    private Element loadXMLFromFile(String xmlFile) throws JDOMException, IOException{
+        SAXBuilder saxBuilder = new SAXBuilder("org.apache.xerces.parsers.SAXParser");
+        Document dom;
+        try (InputStream expStream = this.getClass().getResourceAsStream(xmlFile);
+            InputStreamReader expReader = new InputStreamReader(expStream);) {
+            dom = saxBuilder.build(expReader);
+        }
+        return dom.getRootElement();
+    }
+    
+    private Diff prepareXMLDiff(Element expContent, Element testContent) throws SAXException, IOException{
+        XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+        return new Diff(outputter.outputString(expContent), outputter.outputString(testContent));
     }
 }

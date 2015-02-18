@@ -41,19 +41,26 @@ class NameYearEndReferenceMatcher extends EndReferenceMatcher {
         
         List<Integer> years = this.extractYearsFromContent(referenceContent);
         List<BibEntry> matchingYears = this.findByYears(years);
-        List<BibEntry> matchingNames = this.matchNames(referenceContent, matchingYears);
+        List<BibEntry> matchingNames = this.matchNames(possibleReference, matchingYears);
         
         return matchingNames;
     }
     
-    private List<BibEntry> matchNames(String referenceContent, List<BibEntry> matchingYears){
+    private List<BibEntry> matchNames(InTextReference possibleReference, List<BibEntry> matchingYears){
         List<BibEntry> matchingNames = new ArrayList<>();
+        String paragraphContent = possibleReference.getParentParagraph().getText();
+        Matcher matcher;
         
         for(BibEntry yearMatch : matchingYears){
             List<String> authorValues = yearMatch.getAllFieldValues(BibEntry.FIELD_AUTHOR);
-            
             for(String author : authorValues){
-                System.out.println(author);
+                String lastname = author.split(",")[0];
+                //only look up to the end of the current reference .. (author, 2014) ...
+                matcher = Pattern.compile(Pattern.quote(lastname), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(paragraphContent.substring(0, possibleReference.getEndPosition()));
+                
+                if(matcher.find()){
+                    matchingNames.add(yearMatch);
+                }
             }
         }
         
@@ -67,7 +74,7 @@ class NameYearEndReferenceMatcher extends EndReferenceMatcher {
         Matcher matcher = yearPattern.matcher(referenceContent);
         
         while(matcher.find()){
-            extractedYears.add(Integer.parseInt(matcher.group()));
+            extractedYears.add(Integer.parseInt(matcher.group(1)));
         }
         
         return extractedYears;

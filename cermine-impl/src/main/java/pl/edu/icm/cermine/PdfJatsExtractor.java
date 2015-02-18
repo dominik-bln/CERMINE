@@ -47,6 +47,9 @@ import pl.edu.icm.cermine.tools.transformers.ModelToModelConverter;
  */
 public class PdfJatsExtractor extends AbstractExtractor<InputStream, Element> {
 
+    // @todo bitmask for enabling different extraction stages
+    // http://eddmann.com/posts/using-bit-flags-and-enumsets-in-java/
+
     private List<BibEntry> endReferences;
     private List<InTextReference> inTextReferences;
 
@@ -73,7 +76,6 @@ public class PdfJatsExtractor extends AbstractExtractor<InputStream, Element> {
 
         return root;
     }
-
 
     /**
      * Adds the JATS <front> element to the given root filled with data from the given document.
@@ -119,7 +121,7 @@ public class PdfJatsExtractor extends AbstractExtractor<InputStream, Element> {
         BxContentStructToDocContentStructConverter converter = new BxContentStructToDocContentStructConverter();
         return converter.convert(tmpContentStructure);
     }
-    
+
     /**
      * Applies the configured processors to extract metadata of the document.
      *
@@ -177,33 +179,33 @@ public class PdfJatsExtractor extends AbstractExtractor<InputStream, Element> {
 
         List<InTextReference> possibleReferences = new ArrayList<>();
         InTextReference currentPossibility;
-        
+
         for (DocumentParagraph paragraph : paragraphs) {
             matcher = bracketContentPattern.matcher(paragraph.getText());
-            while(matcher.find()){
+            while (matcher.find()) {
                 // +1/-1 to don't get the bracket but the start/end of the contained string
-                currentPossibility = new InTextReference(paragraph, matcher.start()+1, matcher.end()-1, inTextStyle);
+                currentPossibility = new InTextReference(paragraph, matcher.start() + 1, matcher.end() - 1, inTextStyle);
                 possibleReferences.add(currentPossibility);
             }
         }
-        
+
         return this.filterInTextReferences(inTextStyle, possibleReferences, this.getEndReferences(document));
     }
-    
-    private List<InTextReference> filterInTextReferences(InTextReferenceStyle referenceStyle, List<InTextReference> possibleReferences, List<BibEntry> endReferences) throws ReferenceTypeException{
+
+    private List<InTextReference> filterInTextReferences(InTextReferenceStyle referenceStyle, List<InTextReference> possibleReferences, List<BibEntry> endReferences) throws ReferenceTypeException {
         EndReferenceMatcher referenceMatcher = EndReferenceMatcher.create(referenceStyle.getInTextReferenceType(), endReferences);
-        
+
         List<InTextReference> actualReferences = new ArrayList<>();
-        
-        for(InTextReference reference : possibleReferences){
+
+        for (InTextReference reference : possibleReferences) {
             List<BibEntry> matchingEndReferences = referenceMatcher.match(reference);
-            if(!matchingEndReferences.isEmpty()){
+            if (!matchingEndReferences.isEmpty()) {
                 reference.setEndReferences(matchingEndReferences);
                 reference.getParentParagraph().addInTextReference(reference);
                 actualReferences.add(reference);
             }
         }
-        
+
         return actualReferences;
     }
 
@@ -222,7 +224,7 @@ public class PdfJatsExtractor extends AbstractExtractor<InputStream, Element> {
             for (String currentReferenceString : refs) {
                 BibEntry currentReference = config.bibReferenceParser.parseBibReference(currentReferenceString);
                 // @todo this should probably happen at extraction stage
-                currentReference.setId("R" + (this.endReferences.size()+1));
+                currentReference.setId("R" + (this.endReferences.size() + 1));
                 this.endReferences.add(currentReference);
             }
         }
@@ -238,7 +240,7 @@ public class PdfJatsExtractor extends AbstractExtractor<InputStream, Element> {
         Element refElement;
         for (int i = 0; i < references.length; i++) {
             refElement = new Element("ref");
-            refElement.setAttribute("id", "R" + (i+1));
+            refElement.setAttribute("id", "R" + (i + 1));
             refElement.addContent(references[i]);
             refListElement.addContent(refElement);
         }
