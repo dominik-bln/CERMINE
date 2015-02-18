@@ -20,6 +20,10 @@ package pl.edu.icm.cermine.content.references;
 /**
  * Represents a type of bracket.
  * 
+ * @note The countable ratios are "magical" for now but seem to make it possible to account for 
+ * the usual frequency of the bracket types. A more exact version would be preferable however,
+ * in case anyone got time to create a corpus of scientific documents and count the brackets.
+ * 
  * @author Dominik Horb <cermine@dominik.berlin>
  */
 public enum BracketType {
@@ -31,13 +35,12 @@ public enum BracketType {
     
     private final char opening;
     private final char closing;
-    
     private final double countableRatio;
     
-    BracketType(char opening, char closing, double minimumRatio){
+    BracketType(char opening, char closing, double countableRatio){
         this.opening = opening;
         this.closing = closing;
-        this.countableRatio = minimumRatio;
+        this.countableRatio = countableRatio;
     }
     
     public char getOpeningBracket(){

@@ -24,9 +24,11 @@ import pl.edu.icm.cermine.bibref.model.BibEntry;
 import pl.edu.icm.cermine.content.model.BxDocContentStructure;
 import pl.edu.icm.cermine.content.model.DocumentContentStructure;
 import pl.edu.icm.cermine.content.model.DocumentParagraph;
+import pl.edu.icm.cermine.content.references.EndReferenceMatcher;
 import pl.edu.icm.cermine.content.references.InTextReference;
 import pl.edu.icm.cermine.content.references.InTextReferenceStyle;
 import pl.edu.icm.cermine.content.references.InTextReferenceStyleClassifier;
+import pl.edu.icm.cermine.exception.ReferenceTypeException;
 import pl.edu.icm.cermine.content.transformers.BxContentStructToDocContentStructConverter;
 import pl.edu.icm.cermine.content.transformers.DocContentStructToJatsBodyConverter;
 import pl.edu.icm.cermine.exception.AnalysisException;
@@ -163,8 +165,7 @@ public class PdfJatsExtractor extends AbstractExtractor<InputStream, Element> {
     /**
      * Attempts to extract the in-text references.
      */
-    private List<InTextReference> extractInTextReferences(BxDocument document, DocumentContentStructure documentStructure) throws AnalysisException {
-        List<BibEntry> endReferences = this.getEndReferences(document);
+    private List<InTextReference> extractInTextReferences(BxDocument document, DocumentContentStructure documentStructure) throws AnalysisException, ReferenceTypeException {
         List<DocumentParagraph> paragraphs = documentStructure.getAllParagraphs();
 
         InTextReferenceStyleClassifier styleClassifier = new InTextReferenceStyleClassifier();
@@ -176,20 +177,34 @@ public class PdfJatsExtractor extends AbstractExtractor<InputStream, Element> {
 
         List<InTextReference> possibleReferences = new ArrayList<>();
         InTextReference currentPossibility;
+        
         for (DocumentParagraph paragraph : paragraphs) {
             matcher = bracketContentPattern.matcher(paragraph.getText());
             while(matcher.find()){
-                currentPossibility = new InTextReference(paragraph, matcher.start(), matcher.end()-matcher.start(), null);
+                // +1/-1 to don't get the bracket but the start/end of the contained string
+                currentPossibility = new InTextReference(paragraph, matcher.start()+1, matcher.end()-1, inTextStyle);
                 possibleReferences.add(currentPossibility);
-                paragraph.addInTextReference(currentPossibility);
             }
         }
         
-        return this.filterInTextReferences(possibleReferences, endReferences);
+        return this.filterInTextReferences(inTextStyle, possibleReferences, this.getEndReferences(document));
     }
     
-    private List<InTextReference> filterInTextReferences(List<InTextReference> possibleReferences, List<BibEntry> endReferences){
-        return possibleReferences;
+    private List<InTextReference> filterInTextReferences(InTextReferenceStyle referenceStyle, List<InTextReference> possibleReferences, List<BibEntry> endReferences) throws ReferenceTypeException{
+        EndReferenceMatcher referenceMatcher = EndReferenceMatcher.create(referenceStyle.getInTextReferenceType(), endReferences);
+        
+        List<InTextReference> actualReferences = new ArrayList<>();
+        
+        for(InTextReference reference : possibleReferences){
+            List<BibEntry> matchingEndReferences = referenceMatcher.match(reference);
+            if(!matchingEndReferences.isEmpty()){
+                reference.setEndReferences(matchingEndReferences);
+                reference.getParentParagraph().addInTextReference(reference);
+                actualReferences.add(reference);
+            }
+        }
+        
+        return actualReferences;
     }
 
     public List<InTextReference> getInTextReferences() {
@@ -206,6 +221,8 @@ public class PdfJatsExtractor extends AbstractExtractor<InputStream, Element> {
 
             for (String currentReferenceString : refs) {
                 BibEntry currentReference = config.bibReferenceParser.parseBibReference(currentReferenceString);
+                // @todo this should probably happen at extraction stage
+                currentReference.setId("R" + (this.endReferences.size()+1));
                 this.endReferences.add(currentReference);
             }
         }
@@ -221,7 +238,7 @@ public class PdfJatsExtractor extends AbstractExtractor<InputStream, Element> {
         Element refElement;
         for (int i = 0; i < references.length; i++) {
             refElement = new Element("ref");
-            refElement.setAttribute("id", "R" + (i + 1));
+            refElement.setAttribute("id", "R" + (i+1));
             refElement.addContent(references[i]);
             refListElement.addContent(refElement);
         }

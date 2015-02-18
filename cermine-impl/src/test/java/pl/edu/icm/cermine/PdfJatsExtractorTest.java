@@ -18,7 +18,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+import static junit.framework.Assert.assertEquals;
+import org.custommonkey.xmlunit.DetailedDiff;
 import org.custommonkey.xmlunit.Diff;
+import org.custommonkey.xmlunit.Difference;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -64,24 +67,28 @@ public class PdfJatsExtractorTest {
 
         XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
         Diff diff = new Diff(outputter.outputString(expContent), outputter.outputString(testContent));
+        
         System.out.println(outputter.outputString(testContent));
         assertTrue(diff.similar());
     }
 
     @Test
-    public void inTextReferenceExtractionTest() throws CermineException, IOException {
+    public void testCorrectAmountOfInTextReferencesIsExtracted() throws CermineException, IOException {
         try (InputStream testStream = this.getClass().getResourceAsStream(TEST_FILE)) {
             // call extract so that the in-text references are accessible
             extractor.extract(testStream);
         }
 
         List<InTextReference> references = extractor.getInTextReferences();
+        
         String result = "";
         for (InTextReference reference : references) {
             result += reference.getParentParagraph().getText().substring(
-                reference.getPosition(), reference.getPosition() + reference.getLength());
+                reference.getStartPosition(), reference.getEndPosition());
         }
 
         System.out.println(result);
+        
+        assertEquals(references.size(), 17);
     }
 }

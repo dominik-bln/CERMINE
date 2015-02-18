@@ -19,12 +19,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import pl.edu.icm.cermine.bibref.model.BibEntry;
 import pl.edu.icm.cermine.content.model.DocumentContentStructure;
 import pl.edu.icm.cermine.content.model.DocumentHeading;
 import pl.edu.icm.cermine.content.model.DocumentParagraph;
@@ -103,14 +102,25 @@ public class DocContentStructToJatsBodyConverter implements ModelToModelConverte
         return textWithXRef;
     }
 
+    private String createRidString(List<BibEntry> endReferences) {
+        StringBuilder rid = new StringBuilder();
+        for (BibEntry entry : endReferences) {
+            rid.append(entry.getId());
+            rid.append(" ");
+        }
+
+        return rid.toString().trim();
+    }
+
     private Element addXRefElements(DocumentParagraph paragraph) {
         StringBuilder adaptedText = new StringBuilder(paragraph.getText());
 
         // move through the original text in reverse so that the indices to insert elements
         // don't shift
         for (InTextReference reference : Lists.reverse(paragraph.getInTextReferences())) {
-            adaptedText.insert(reference.getPosition() + reference.getLength() - 1, "</xref>");
-            adaptedText.insert(reference.getPosition() + 1, "<xref ref-type='bibr' rid=''>");
+            String rid = this.createRidString(reference.getEndReferences());
+            adaptedText.insert(reference.getEndPosition(), "</xref>");
+            adaptedText.insert(reference.getStartPosition(), "<xref ref-type='bibr' rid='" + rid + "'>");
         }
 
         adaptedText.insert(0, "\n<p>");

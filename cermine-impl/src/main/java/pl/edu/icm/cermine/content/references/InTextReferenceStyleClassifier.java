@@ -67,7 +67,7 @@ public class InTextReferenceStyleClassifier {
         
         int currentMax = Integer.MIN_VALUE;
         int maxIndex = -1;
-        int currentCount = 0;
+        int currentCount;
 
         for (int i = 0; i < bracketTypes.length; i++) {
             currentCount = StringUtils.countMatches(allText, String.valueOf(bracketTypes[i].getOpeningBracket()));
@@ -92,7 +92,7 @@ public class InTextReferenceStyleClassifier {
 
         int totalLengthOfMatches = 0;
         for (String match : matches) {
-            totalLengthOfMatches += match.length();
+            totalLengthOfMatches += match.length() -2; // don't count the brackets
         }
 
         int average = totalLengthOfMatches / matches.size();
@@ -104,7 +104,7 @@ public class InTextReferenceStyleClassifier {
     }
 
     private List<String> findAllBracketContents(BracketType bracketType, String allText) {
-        String patternString = "\\" + bracketType.getOpeningBracket() + "(.*?)\\" + bracketType.getClosingBracket() + "\\.";
+        String patternString = "\\" + bracketType.getOpeningBracket() + "(.*?)\\" + bracketType.getClosingBracket();
         Pattern bracketContentPattern = Pattern.compile(patternString);
 
         Matcher matcher = bracketContentPattern.matcher(allText);

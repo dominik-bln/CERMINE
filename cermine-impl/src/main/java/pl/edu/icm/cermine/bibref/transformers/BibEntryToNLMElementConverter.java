@@ -30,7 +30,7 @@ import pl.edu.icm.cermine.tools.transformers.ModelToModelConverter;
  */
 public class BibEntryToNLMElementConverter implements ModelToModelConverter<BibEntry, Element> {
 
-    private static final Map<String, String> BIBENTRY_TO_NLM = new HashMap<String, String>();
+    private static final Map<String, String> BIBENTRY_TO_NLM = new HashMap<>();
 
     static {
         BIBENTRY_TO_NLM.put(BibEntry.FIELD_TITLE,     "article-title");
@@ -51,10 +51,10 @@ public class BibEntryToNLMElementConverter implements ModelToModelConverter<BibE
     public Element convert(BibEntry entry, Object... hints) throws TransformationException {
         Element element = new Element("mixed-citation");
      
-        Map<BibEntryField, String> fieldKeyMap = new HashMap<BibEntryField, String>();
+        Map<BibEntryField, String> fieldKeyMap = new HashMap<>();
         
         String text = entry.getText();
-        List<BibEntryField> fields = new ArrayList<BibEntryField>();
+        List<BibEntryField> fields = new ArrayList<>();
         for (String key : entry.getFieldKeys()) {
             fields.addAll(entry.getAllFields(key));
             for (BibEntryField field : entry.getAllFields(key)) {
@@ -167,7 +167,7 @@ public class BibEntryToNLMElementConverter implements ModelToModelConverter<BibE
 
     @Override
     public List<Element> convertAll(List<BibEntry> source, Object... hints) throws TransformationException {
-        List<Element> elements = new ArrayList<Element>(source.size());
+        List<Element> elements = new ArrayList<>(source.size());
         for (BibEntry entry: source) {
             elements.add(convert(entry, hints));
         }

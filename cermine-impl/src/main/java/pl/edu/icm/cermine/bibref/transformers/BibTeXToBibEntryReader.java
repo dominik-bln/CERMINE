@@ -51,7 +51,7 @@ public class BibTeXToBibEntryReader implements FormatToModelReader<BibEntry> {
 
     @Override
     public List<BibEntry> readAll(String string, Object... hints) throws TransformationException {
-        List<BibEntry> entries = new ArrayList<BibEntry>();
+        List<BibEntry> entries = new ArrayList<>();
         String[] split = string.split("\n\n");
         for (String s : split) {
             entries.add(processBibteX(s.substring(s.indexOf("@"))));

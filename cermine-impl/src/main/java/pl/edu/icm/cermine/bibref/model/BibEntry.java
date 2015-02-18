@@ -18,23 +18,31 @@
 
 package pl.edu.icm.cermine.bibref.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Bibliographic reference entry, modelled after BibTeX format.
+ * Bibliographic reference entry modeled after the BibTeX format.
+ * 
+ * @todo add manager with hashmap instead of keys here; move static fields at bottom to enum
  * 
  * @author Lukasz Bolikowski (bolo@icm.edu.pl)
- * 
  */
 public class BibEntry {
 
+    // @note not necessarily the best place, but I needed to store the id somewhere, so that 
+    // it could be accessed when writing the <xref> elements, see above for possible later changes
+    private String id;
     private String type;
     private String key;
     private String text;
-    private final SortedMap<String, List<BibEntryField>> fields = new TreeMap<String, List<BibEntryField>>();
+    private final SortedMap<String, List<BibEntryField>> fields = new TreeMap<>();
 
     public BibEntry() {
     }
@@ -64,6 +72,14 @@ public class BibEntry {
     public BibEntry setKey(String key) {
         this.key = key;
         return this;
+    }
+    
+    public void setId(String id){
+        this.id = id;
+    }
+    
+    public String getId(){
+        return this.id;
     }
 
     public String getText() {
@@ -101,7 +117,7 @@ public class BibEntry {
 
     public List<String> getAllFieldValues(String key) {
         List<BibEntryField> beFields = getAllFields(key);
-        List<String> values = new ArrayList<String>();
+        List<String> values = new ArrayList<>();
 
         for (BibEntryField field : beFields) {
             values.add(field.getText());
@@ -184,7 +200,7 @@ public class BibEntry {
         sb.append('{').append(key == null ? generateKey() : key).append(",\n");
         for (String field : fields.keySet()) {
             sb.append('\t').append(field).append(" = {");
-            List<String> values = new ArrayList<String>();
+            List<String> values = new ArrayList<>();
             for (BibEntryField bef : fields.get(field)) {
                 values.add(bef.getText());
             }
@@ -228,19 +244,10 @@ public class BibEntry {
         return hash;
     }
     
-    
-    /* Field constants */
-    public static final String FIELD_ABSTRACT = "abstract";
-    public static final String FIELD_ADDRESS = "address";
-    public static final String FIELD_AFFILIATION = "affiliation";
-    public static final String FIELD_ANNOTE = "annote";
     public static final String FIELD_AUTHOR = "author";
-    public static final String FIELD_BOOKTITLE = "booktitle";
-    public static final String FIELD_CHAPTER = "chapter";
     public static final String FIELD_CONTENTS = "contents";
     public static final String FIELD_COPYRIGHT = "copyright";
     public static final String FIELD_CROSSREF = "crossref";
-    public static final String FIELD_DOI = "doi";
     public static final String FIELD_EDITION = "edition";
     public static final String FIELD_EDITOR = "editor";
     public static final String FIELD_HOWPUBLISHED = "howpublished";
