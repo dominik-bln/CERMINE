@@ -39,3 +39,6 @@ cermine-web/catalina.base*
 
 # Vagrant
 .vagrant
+
+# SASS
+.sass-cache

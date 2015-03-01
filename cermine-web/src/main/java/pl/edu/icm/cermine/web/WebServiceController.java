@@ -45,7 +45,7 @@ import pl.edu.icm.cermine.web.service.exceptions.ServiceException;
  */
 @Controller
 //@RequestMapping("api")
-public class RestController extends CermineController {
+public class WebServiceController extends CermineController {
 
     @RequestMapping(value = "/extract.do", method = RequestMethod.POST)
     public ResponseEntity<String> extractSync(@RequestBody byte[] content,

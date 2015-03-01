@@ -1,3 +1,4 @@
+@import "reset";
 @import "fonts";
 @import "compatibility";
 
@@ -384,6 +385,11 @@ table.summaryTable {
 	p {
 		padding: 0.7em;
 	}
+}
+
+.in-text-reference {
+  color: #327E04;
+  cursor: pointer;
 }
 
 

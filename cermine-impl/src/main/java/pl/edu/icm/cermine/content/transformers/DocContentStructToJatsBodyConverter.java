@@ -19,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -111,16 +112,32 @@ public class DocContentStructToJatsBodyConverter implements ModelToModelConverte
 
         return rid.toString().trim();
     }
+    
+    private String createAltString(List<BibEntry> endReferences){
+        StringBuilder alt = new StringBuilder();
+        for (BibEntry entry : endReferences) {
+            alt.append(StringEscapeUtils.escapeXml(entry.getText()));
+            alt.append("\n");
+        }
+
+        return alt.toString();
+    }
 
     private Element addXRefElements(DocumentParagraph paragraph) {
         StringBuilder adaptedText = new StringBuilder(paragraph.getText());
 
         // move through the original text in reverse so that the indices to insert elements
         // don't shift
+        String rid, alt, openingTag;
         for (InTextReference reference : Lists.reverse(paragraph.getInTextReferences())) {
-            String rid = this.createRidString(reference.getEndReferences());
+            rid = this.createRidString(reference.getEndReferences());
+            alt = this.createAltString(reference.getEndReferences());
             adaptedText.insert(reference.getEndPosition(), "</xref>");
-            adaptedText.insert(reference.getStartPosition(), "<xref ref-type='bibr' rid='" + rid + "'>");
+            // using alt for the reference content string is somewhat of a hack, but currently (02/2015)
+            // the easiest way to transport it to the web interface without the need to search
+            // the Jats elements for it
+            openingTag = "<xref ref-type='bibr' rid='" + rid + "' alt=' "+ alt + "'>";
+            adaptedText.insert(reference.getStartPosition(), openingTag);
         }
 
         adaptedText.insert(0, "\n<p>");

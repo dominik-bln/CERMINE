@@ -36,7 +36,7 @@ public interface CermineExtractorService {
      * @param ii
      * @return result of the extraction, including basic request stats.
      * @throws AnalysisException
-     * @throws pl.edu.icm.cermine.service.exceptions.ServiceException
+     * @throws ServiceException
      */
     public ExtractionResult extractNLM(InputStream ii) throws AnalysisException, ServiceException;
 

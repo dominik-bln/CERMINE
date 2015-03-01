@@ -173,7 +173,8 @@ public class PdfJatsExtractor extends AbstractExtractor<InputStream, Element> {
         InTextReferenceStyleClassifier styleClassifier = new InTextReferenceStyleClassifier();
         InTextReferenceStyle inTextStyle = styleClassifier.classify(documentStructure);
 
-        Pattern bracketContentPattern = Pattern.compile("\\" + inTextStyle.getBracketType().getOpeningBracket() + "(.*?)\\" + inTextStyle.getBracketType().getClosingBracket());
+        // Pattern.DOTALL to search across line endings
+        Pattern bracketContentPattern = Pattern.compile("\\" + inTextStyle.getBracketType().getOpeningBracket() + "(.*?)\\" + inTextStyle.getBracketType().getClosingBracket(), Pattern.DOTALL);
 
         Matcher matcher;
 
@@ -211,6 +212,10 @@ public class PdfJatsExtractor extends AbstractExtractor<InputStream, Element> {
 
     public List<InTextReference> getInTextReferences() {
         return this.inTextReferences;
+    }
+    
+    public List<BibEntry> getEndReferences(){
+        return this.endReferences;
     }
 
     /**

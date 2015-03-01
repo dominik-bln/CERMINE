@@ -75,7 +75,7 @@ public class NLMElementToHTMLWriter implements ModelToFormatWriter<Element> {
                     break;
                 case "p":
                     Element el = new Element("p");
-                    el.setText(child.getText());
+                    el.addContent(this.convertXRefToTooltipElements(child));
                     elements.add(el);
                     break;
                 case "sec":
@@ -84,6 +84,22 @@ public class NLMElementToHTMLWriter implements ModelToFormatWriter<Element> {
             }
         }
         return elements;
+    }
+    
+    private Element convertXRefToTooltipElements(Element element) {
+        Element copyToAdd = (Element) element.clone();
+        List<Element> xrefChildren = copyToAdd.getChildren("xref");
+
+        for(Element xref : xrefChildren){
+            xref.setName("em");
+            xref.removeAttribute("rid");
+            xref.removeAttribute("ref-type");
+            xref.setAttribute("title", xref.getAttributeValue("alt"));
+            xref.setAttribute("class", "in-text-reference");
+            
+        }
+
+        return copyToAdd;
     }
 
     @Override

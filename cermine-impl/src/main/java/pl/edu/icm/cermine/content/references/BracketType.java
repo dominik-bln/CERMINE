@@ -29,7 +29,7 @@ package pl.edu.icm.cermine.content.references;
 public enum BracketType {
 
     SQUARE_BRACKETS('[', ']', 1.0), 
-    PARENTHESES('(', ')', 0.1), 
+    PARENTHESES('(', ')', 0.05), 
     CURLY_BRACES('{', '}', 0.0),
     ANGLE_BRACKETS('<', '>', 0.0);
     

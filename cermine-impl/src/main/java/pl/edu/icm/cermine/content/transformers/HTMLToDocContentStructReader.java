@@ -53,9 +53,7 @@ public class HTMLToDocContentStructReader implements FormatToModelReader<Documen
             dcs.setParents();
             
             return dcs;
-        } catch (JDOMException ex) {
-            throw new TransformationException(ex);
-        } catch (IOException ex) {
+        } catch (JDOMException | IOException ex) {
             throw new TransformationException(ex);
         }
     }
@@ -93,7 +91,7 @@ public class HTMLToDocContentStructReader implements FormatToModelReader<Documen
         }
         
         int nextLevel = getHeaderLevel(current);
-        List<Element> els = new ArrayList<Element>();
+        List<Element> els = new ArrayList<>();
         while (current != null) {
             if (isHeader(current) && nextLevel == getHeaderLevel(current) && !els.isEmpty()) {
                 DocumentContentStructure n = createDocContentStruct(els, level+1);

@@ -44,7 +44,7 @@ public class DocumentMetadataToNLMElementConverter implements ModelToModelConver
 
     @Override
     public List<Element> convertAll(List<DocumentMetadata> source, Object... hints) throws TransformationException {
-        List<Element> elements = new ArrayList<Element>(source.size());
+        List<Element> elements = new ArrayList<>(source.size());
         for (DocumentMetadata metadata : source) {
             elements.add(convert(metadata));
         }

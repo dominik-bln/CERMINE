@@ -36,6 +36,10 @@ $(document).ready(function(){
         $(this).find("img").attr("src", gitImg);
     });
     
+    var referenceElements = $('.in-text-reference');
+    if(referenceElements.length > 0){
+      referenceElements.tooltip();
+    }
 });
 
 
