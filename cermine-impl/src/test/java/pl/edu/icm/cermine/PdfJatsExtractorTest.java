@@ -42,6 +42,7 @@ public class PdfJatsExtractorTest {
 
     static final private String TEST_FILE = "/pl/edu/icm/cermine/test2.pdf";
     static final private String TEST_FILE2 = "/pl/edu/icm/cermine/test4.pdf";
+    static final private String EXAMPLE3 = "/pl/edu/icm/cermine/example3.pdf";
     static final private String EXP_FILE = "/pl/edu/icm/cermine/test2-cont_with_xref.xml";
 
     private PdfJatsExtractor extractor;
@@ -82,6 +83,14 @@ public class PdfJatsExtractorTest {
         assertTrue(references.size() >= 15);
     }
 
+    @Test
+    public void testNumericReferenceRangesInPDFAreFound() throws CermineException, IOException {
+        this.callExtractForFile(EXAMPLE3);
+
+        InTextReference reference = extractor.getInTextReferences().get(1);
+        assertEquals(4, reference.getEndReferences().size());
+    }
+    
     private Element callExtractForFile(String file) throws CermineException, IOException {
         try (InputStream testStream = this.getClass().getResourceAsStream(file)) {
             // call extract so that the in-text references are accessible

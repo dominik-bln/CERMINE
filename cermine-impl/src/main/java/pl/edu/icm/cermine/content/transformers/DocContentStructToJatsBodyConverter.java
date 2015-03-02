@@ -19,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -103,7 +104,7 @@ public class DocContentStructToJatsBodyConverter implements ModelToModelConverte
         return textWithXRef;
     }
 
-    private String createRidString(List<BibEntry> endReferences) {
+    private String createRidString(Set<BibEntry> endReferences) {
         StringBuilder rid = new StringBuilder();
         for (BibEntry entry : endReferences) {
             rid.append(entry.getId());
@@ -113,7 +114,7 @@ public class DocContentStructToJatsBodyConverter implements ModelToModelConverte
         return rid.toString().trim();
     }
     
-    private String createAltString(List<BibEntry> endReferences){
+    private String createAltString(Set<BibEntry> endReferences){
         StringBuilder alt = new StringBuilder();
         for (BibEntry entry : endReferences) {
             alt.append(StringEscapeUtils.escapeXml(entry.getText()));
@@ -136,7 +137,7 @@ public class DocContentStructToJatsBodyConverter implements ModelToModelConverte
             // using alt for the reference content string is somewhat of a hack, but currently (02/2015)
             // the easiest way to transport it to the web interface without the need to search
             // the Jats elements for it
-            openingTag = "<xref ref-type='bibr' rid='" + rid + "' alt=' "+ alt + "'>";
+            openingTag = "<xref ref-type=\"bibr\" rid=\"" + rid + "\" alt=\" "+ alt + "\">";
             adaptedText.insert(reference.getStartPosition(), openingTag);
         }
 

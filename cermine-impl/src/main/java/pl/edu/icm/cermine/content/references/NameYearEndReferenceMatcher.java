@@ -6,7 +6,9 @@
 package pl.edu.icm.cermine.content.references;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import pl.edu.icm.cermine.bibref.model.BibEntry;
@@ -39,18 +41,18 @@ class NameYearEndReferenceMatcher extends EndReferenceMatcher {
     }
 
     @Override
-    protected List<BibEntry> doMatching(InTextReference possibleReference) {
+    protected Set<BibEntry> doMatching(InTextReference possibleReference) {
         String referenceContent = this.retrieveReferenceContent(possibleReference);
 
         List<Integer> years = this.extractYearsFromContent(referenceContent);
-        List<BibEntry> matchingYears = this.findByYears(years);
-        List<BibEntry> matchingNames = this.matchNames(possibleReference, matchingYears);
+        Set<BibEntry> matchingYears = this.findByYears(years);
+        Set<BibEntry> matchingNames = this.matchNames(possibleReference, matchingYears);
 
         return matchingNames;
     }
 
-    private List<BibEntry> matchNames(InTextReference possibleReference, List<BibEntry> matchingYears) {
-        List<BibEntry> matchingNames = new ArrayList<>();
+    private Set<BibEntry> matchNames(InTextReference possibleReference, Set<BibEntry> matchingYears) {
+        Set<BibEntry> matchingNames = new HashSet<>();
         String searchableContent = this.findSearchableContent(possibleReference);
 
         Matcher matcher;
@@ -106,8 +108,8 @@ class NameYearEndReferenceMatcher extends EndReferenceMatcher {
         return extractedYears;
     }
 
-    private List<BibEntry> findByYears(List<Integer> years) {
-        List<BibEntry> foundEndReferences = new ArrayList<>();
+    private Set<BibEntry> findByYears(List<Integer> years) {
+        Set<BibEntry> foundEndReferences = new HashSet<>();
         for (Integer year : years) {
             foundEndReferences.addAll(this.findByYear(year));
         }
@@ -115,8 +117,8 @@ class NameYearEndReferenceMatcher extends EndReferenceMatcher {
         return foundEndReferences;
     }
 
-    private List<BibEntry> findByYear(int year) {
-        List<BibEntry> yearReferences = new ArrayList<>();
+    private Set<BibEntry> findByYear(int year) {
+        Set<BibEntry> yearReferences = new HashSet<>();
 
         for (BibEntry endReference : this.getEndReferences()) {
             if (endReference.getFirstFieldValue(BibEntry.FIELD_YEAR).equals(String.valueOf(year))) {

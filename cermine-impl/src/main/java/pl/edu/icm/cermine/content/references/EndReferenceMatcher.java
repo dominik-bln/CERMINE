@@ -15,10 +15,11 @@
 package pl.edu.icm.cermine.content.references;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import pl.edu.icm.cermine.exception.ReferenceTypeException;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import pl.edu.icm.cermine.bibref.model.BibEntry;
 
 /**
@@ -41,12 +42,12 @@ public abstract class EndReferenceMatcher {
      * @return The list of all matching end references for the given reference.
      * @throws ReferenceTypeException In case the type of the in-text reference is not supported.
      */
-    public final List<BibEntry> match(InTextReference possibleReference) throws ReferenceTypeException {
+    public final Set<BibEntry> match(InTextReference possibleReference) throws ReferenceTypeException {
         if (possibleReference.getInTextReferenceStyle().getInTextReferenceType() == this.inTextReferenceType) {
             try {
                 return this.doMatching(possibleReference);
             } catch (ParseException ex) {
-                return new ArrayList<>();
+                return new HashSet<>();
             }
         }
 
@@ -60,7 +61,7 @@ public abstract class EndReferenceMatcher {
      * @return The list of all matching end references for the given reference.
      * @throws java.text.ParseException Thrown when something happened during parsing
      */
-    protected abstract List<BibEntry> doMatching(InTextReference possibleReference) throws ParseException;
+    protected abstract Set<BibEntry> doMatching(InTextReference possibleReference) throws ParseException;
 
     /**
      * Creates an instance of an EndReferenceMatcher for the given reference type.

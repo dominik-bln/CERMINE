@@ -17,6 +17,7 @@ package pl.edu.icm.cermine;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jdom.Element;
@@ -199,7 +200,7 @@ public class PdfJatsExtractor extends AbstractExtractor<InputStream, Element> {
         List<InTextReference> actualReferences = new ArrayList<>();
 
         for (InTextReference reference : possibleReferences) {
-            List<BibEntry> matchingEndReferences = referenceMatcher.match(reference);
+            Set<BibEntry> matchingEndReferences = referenceMatcher.match(reference);
             if (!matchingEndReferences.isEmpty()) {
                 reference.setEndReferences(matchingEndReferences);
                 reference.getParentParagraph().addInTextReference(reference);

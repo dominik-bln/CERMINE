@@ -15,6 +15,7 @@
 package pl.edu.icm.cermine.content.references;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,7 +35,7 @@ public class InTextReferenceStyleClassifier {
     /**
      * Assumed minimum average length of name-year references to determine the referencing style.
      */
-    public static int NAME_YEAR_THRESHOLD = 4;
+    public static int NAME_YEAR_THRESHOLD = 6;
 
     /**
      * Determines the in-text reference style for the given document.
@@ -88,19 +89,27 @@ public class InTextReferenceStyleClassifier {
      * with an author-year scheme.
      */
     private InTextReferenceType findMostLikeylReferenceType(BracketType bracketType, String allText) {
-        List<String> matches = findAllBracketContents(bracketType, allText);
-
-        int totalLengthOfMatches = 0;
-        for (String match : matches) {
-            totalLengthOfMatches += match.length() -2; // don't count the brackets
-        }
-
-        int average = totalLengthOfMatches / matches.size();
-        if (average >= NAME_YEAR_THRESHOLD) {
+        double median = this.findMatchLengthsMedian(this.findAllBracketContents(bracketType, allText));
+        
+        if (median >= NAME_YEAR_THRESHOLD) {
             return InTextReferenceType.NAME_YEAR;
         }
 
         return InTextReferenceType.NUMERIC;
+    }
+    
+    private double findMatchLengthsMedian(List<String> matches){
+        int[] matchLengths = new int[matches.size()];
+        for (int i=0;i<matches.size();i++) {
+            matchLengths[i] = matches.get(i).length()-2;// don't count the brackets
+        }
+        Arrays.sort(matchLengths);
+        if(matchLengths.length %2 ==0){
+            return ((double)matchLengths[matchLengths.length/2] + 
+                (double)matchLengths[matchLengths.length/2 - 1])/2;
+        }
+        
+        return (double) matchLengths[matchLengths.length/2];
     }
 
     private List<String> findAllBracketContents(BracketType bracketType, String allText) {

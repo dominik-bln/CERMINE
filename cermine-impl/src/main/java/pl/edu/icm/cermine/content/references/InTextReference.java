@@ -5,8 +5,8 @@
  */
 package pl.edu.icm.cermine.content.references;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import pl.edu.icm.cermine.bibref.model.BibEntry;
 import pl.edu.icm.cermine.content.model.DocumentParagraph;
 
@@ -27,7 +27,7 @@ public final class InTextReference {
     private final int endPosition;
     private final DocumentParagraph parentParagraph;
     private final InTextReferenceStyle inTextReferenceStyle;
-    private List<BibEntry> endReferences;
+    private Set<BibEntry> endReferences;
 
     /**
      * 
@@ -37,7 +37,7 @@ public final class InTextReference {
      * @param inTextReferenceStyle The style of this in-text reference.
      */
     public InTextReference(DocumentParagraph parentParagraph, int startPosition, int endPosition, InTextReferenceStyle inTextReferenceStyle) {
-        this.endReferences = new ArrayList<>();
+        this.endReferences = new HashSet<>();
         this.parentParagraph = parentParagraph;
         this.startPosition = startPosition;
         this.endPosition = endPosition;
@@ -60,11 +60,11 @@ public final class InTextReference {
         return this.inTextReferenceStyle;
     }
 
-    public final List<BibEntry> getEndReferences() {
+    public final Set<BibEntry> getEndReferences() {
         return this.endReferences;
     }
     
-    public final void setEndReferences(List<BibEntry> endReferences){
+    public final void setEndReferences(Set<BibEntry> endReferences){
         this.endReferences = endReferences;
     }
 }

@@ -15,8 +15,8 @@
 package pl.edu.icm.cermine.content.references;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import pl.edu.icm.cermine.bibref.model.BibEntry;
@@ -34,20 +34,22 @@ import pl.edu.icm.cermine.bibref.model.BibEntry;
  */
 class NumericEndReferenceMatcher extends EndReferenceMatcher {
 
-    private final static Pattern rangePattern;
-    private final static Pattern numberPattern;
+    private final static Pattern RANGE_PATTERN;
+    private final static Pattern NUMBER_PATTERN;
+    private final static Pattern HYPHEN_PATTERN;
 
     static {
-        rangePattern = Pattern.compile("\\d+\\s*-\\s*\\d");
-        numberPattern = Pattern.compile("\\d+");
+        RANGE_PATTERN = Pattern.compile("\\d+\\s*\\p{Pd}\\s*\\d+");
+        NUMBER_PATTERN = Pattern.compile("\\d+");
+        HYPHEN_PATTERN = Pattern.compile("\\p{Pd}");
     }
 
     protected NumericEndReferenceMatcher() {
     }
 
     @Override
-    protected List<BibEntry> doMatching(InTextReference possibleReference) throws ParseException {
-        List<BibEntry> matchingReferences = new ArrayList<>();
+    protected Set<BibEntry> doMatching(InTextReference possibleReference) throws ParseException {
+        Set<BibEntry> matchingReferences = new HashSet<>();
         String contentToProcess = this.retrieveReferenceContent(possibleReference);
 
         contentToProcess = this.processRanges(contentToProcess, matchingReferences);
@@ -56,43 +58,47 @@ class NumericEndReferenceMatcher extends EndReferenceMatcher {
         return matchingReferences;
     }
 
-    private String processRanges(String contentToProcess, List<BibEntry> listForMatches) throws ParseException {
-        Matcher matcher = rangePattern.matcher(contentToProcess);
+    private String processRanges(String contentToProcess, Set<BibEntry> matches) throws ParseException {
+        Matcher matcher = RANGE_PATTERN.matcher(contentToProcess);
 
+        Matcher hyphenMatcher;
         String currentFind;
         int hyphenIndex, rangeStart, rangeEnd;
         while (matcher.find()) {
             currentFind = matcher.group();
-            hyphenIndex = currentFind.indexOf("-");
-            rangeStart = Integer.parseInt(currentFind.substring(0, hyphenIndex));
-            rangeEnd = Integer.parseInt(currentFind.substring(hyphenIndex + 1, currentFind.length()));
+            hyphenMatcher = HYPHEN_PATTERN.matcher(currentFind);
+            hyphenMatcher.find();
+            hyphenIndex = hyphenMatcher.start();
+            rangeStart = Integer.parseInt(currentFind.substring(0, hyphenIndex).trim());
+            rangeEnd = Integer.parseInt(currentFind.substring(hyphenIndex + 1, currentFind.length()).trim());
 
             if (rangeStart < rangeEnd) {
                 for (int i = rangeStart; i <= rangeEnd; i++) {
-                    this.addSingleMatch(i, listForMatches);
+                    this.addSingleMatch(i, matches);
                 }
             } else {
                 throw new ParseException("Problem while parsing a range", matcher.regionStart());
             }
         }
 
-        return contentToProcess.replaceAll(rangePattern.pattern(), "");
+        return matcher.replaceAll("");
     }
 
-    private void processSingleReferences(String contentToProcess, List<BibEntry> listForMatches) throws ParseException {
-        Matcher matcher = numberPattern.matcher(contentToProcess);
+    private void processSingleReferences(String contentToProcess, Set<BibEntry> matches) throws ParseException {
+        Matcher matcher = NUMBER_PATTERN.matcher(contentToProcess);
 
         int currentFind;
         while (matcher.find()) {
             currentFind = Integer.parseInt(matcher.group());
-            this.addSingleMatch(currentFind, listForMatches);
+            this.addSingleMatch(currentFind, matches);
         }
 
     }
 
-    private void addSingleMatch(int match, List<BibEntry> listForMatches) throws ParseException {
+    private void addSingleMatch(int match, Set<BibEntry> matches) throws ParseException {
         if (this.getEndReferences().size() >= match) {
-            listForMatches.add(this.getEndReferences().get(match - 1));
+            // -1 to account for zero based collection
+            matches.add(this.getEndReferences().get(match - 1));
         } else {
             throw new ParseException("No reference for this match.", 0);
         }
