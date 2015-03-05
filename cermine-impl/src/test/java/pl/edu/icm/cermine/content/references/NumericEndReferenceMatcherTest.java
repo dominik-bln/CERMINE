@@ -30,7 +30,7 @@ public class NumericEndReferenceMatcherTest {
         
         Set<BibEntry> result = instance.match(referenceToCheck);
         
-        assertEquals(result.size(), 3);
+        assertEquals(3, result.size());
     }
     
     private DocumentParagraph prepareParentParagraph(){

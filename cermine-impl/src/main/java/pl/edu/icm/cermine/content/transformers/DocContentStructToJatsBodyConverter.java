@@ -118,7 +118,7 @@ public class DocContentStructToJatsBodyConverter implements ModelToModelConverte
         StringBuilder alt = new StringBuilder();
         for (BibEntry entry : endReferences) {
             alt.append(StringEscapeUtils.escapeXml(entry.getText()));
-            alt.append("\n");
+            alt.append("\n\n");
         }
 
         return alt.toString();

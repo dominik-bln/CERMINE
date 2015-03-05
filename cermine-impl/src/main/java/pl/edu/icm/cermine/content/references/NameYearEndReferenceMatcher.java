@@ -1,7 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * This file is part of CERMINE project.
+ * Copyright (c) 2011-2013 ICM-UW
+ *
+ * CERMINE is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * CERMINE is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CERMINE. If not, see <http://www.gnu.org/licenses/>.
  */
 package pl.edu.icm.cermine.content.references;
 
@@ -79,7 +91,8 @@ class NameYearEndReferenceMatcher extends EndReferenceMatcher {
 
     private String findSearchableContent(InTextReference possibleReference) {
         String paragraphContent = possibleReference.getParentParagraph().getText();
-        int searchStart = this.findSearchStartIndex(possibleReference.getParentParagraph());
+        int searchStart = this.findSearchStartIndex(
+            possibleReference.getParentParagraph());
         int searchEnd = possibleReference.getEndPosition();
         return paragraphContent.substring(searchStart, searchEnd);
     }
@@ -89,7 +102,8 @@ class NameYearEndReferenceMatcher extends EndReferenceMatcher {
         int startIndex = 0;
         if (currentParagraphReferences.size() > 0) {
             // the assumption would be that the last added reference is right before the current possibility
-            InTextReference priorReference = currentParagraphReferences.get(currentParagraphReferences.size()-1);
+            InTextReference priorReference = currentParagraphReferences.get(
+                currentParagraphReferences.size()-1);
             startIndex = priorReference.getEndPosition();
         }
 
@@ -121,7 +135,8 @@ class NameYearEndReferenceMatcher extends EndReferenceMatcher {
         Set<BibEntry> yearReferences = new HashSet<>();
 
         for (BibEntry endReference : this.getEndReferences()) {
-            if (endReference.getFirstFieldValue(BibEntry.FIELD_YEAR).equals(String.valueOf(year))) {
+            if (endReference.getFirstFieldValue(BibEntry.FIELD_YEAR).
+                equals(String.valueOf(year))) {
                 yearReferences.add(endReference);
             }
         }

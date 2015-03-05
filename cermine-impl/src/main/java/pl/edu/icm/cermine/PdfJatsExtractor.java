@@ -21,22 +21,14 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jdom.Element;
+import pl.edu.icm.cermine.content.model.*;
 import pl.edu.icm.cermine.bibref.model.BibEntry;
-import pl.edu.icm.cermine.content.model.BxDocContentStructure;
-import pl.edu.icm.cermine.content.model.DocumentContentStructure;
-import pl.edu.icm.cermine.content.model.DocumentParagraph;
-import pl.edu.icm.cermine.content.references.EndReferenceMatcher;
-import pl.edu.icm.cermine.content.references.InTextReference;
-import pl.edu.icm.cermine.content.references.InTextReferenceStyle;
-import pl.edu.icm.cermine.content.references.InTextReferenceStyleClassifier;
-import pl.edu.icm.cermine.exception.ReferenceTypeException;
-import pl.edu.icm.cermine.content.transformers.BxContentStructToDocContentStructConverter;
-import pl.edu.icm.cermine.content.transformers.DocContentStructToJatsBodyConverter;
-import pl.edu.icm.cermine.exception.AnalysisException;
-import pl.edu.icm.cermine.exception.CermineException;
+import pl.edu.icm.cermine.content.references.*;
+import pl.edu.icm.cermine.exception.*;
+import pl.edu.icm.cermine.content.transformers.*;
 import pl.edu.icm.cermine.metadata.model.DocumentAffiliation;
 import pl.edu.icm.cermine.metadata.model.DocumentMetadata;
-import pl.edu.icm.cermine.metadata.transformers.DocumentMetadataToNLMElementConverter;
+import pl.edu.icm.cermine.metadata.transformers.*;
 import pl.edu.icm.cermine.structure.model.BxDocument;
 import pl.edu.icm.cermine.tools.transformers.ModelToModelConverter;
 
@@ -228,7 +220,8 @@ public class PdfJatsExtractor extends AbstractExtractor<InputStream, Element> {
             String[] refs = config.bibReferenceExtractor.extractBibReferences(document);
 
             for (String currentReferenceString : refs) {
-                BibEntry currentReference = config.bibReferenceParser.parseBibReference(currentReferenceString);
+                BibEntry currentReference = config.bibReferenceParser
+                    .parseBibReference(currentReferenceString);
                 // @todo this should probably happen at extraction stage
                 currentReference.setId("R" + (this.endReferences.size() + 1));
                 this.endReferences.add(currentReference);

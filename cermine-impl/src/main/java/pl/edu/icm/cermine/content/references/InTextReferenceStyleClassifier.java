@@ -48,7 +48,8 @@ public class InTextReferenceStyleClassifier {
      * @return The most likely in-text reference style.
      */
     public InTextReferenceStyle classify(DocumentContentStructure documentStructure) {
-        String allText = this.concatenateParagraphs(documentStructure.getAllParagraphTexts());
+        String allText = this.concatenateParagraphs(
+            documentStructure.getAllParagraphTexts());
         BracketType mostFrequentBracketType = this.findMostLikelyBracketType(allText);
         InTextReferenceType referenceType = this.findMostLikeylReferenceType(mostFrequentBracketType, allText);
 
@@ -65,7 +66,7 @@ public class InTextReferenceStyleClassifier {
 
     private BracketType findMostLikelyBracketType(String allText) {
         BracketType[] bracketTypes = BracketType.values();
-        
+
         int currentMax = Integer.MIN_VALUE;
         int maxIndex = -1;
         int currentCount;
@@ -90,26 +91,26 @@ public class InTextReferenceStyleClassifier {
      */
     private InTextReferenceType findMostLikeylReferenceType(BracketType bracketType, String allText) {
         double median = this.findMatchLengthsMedian(this.findAllBracketContents(bracketType, allText));
-        
+
         if (median >= NAME_YEAR_THRESHOLD) {
             return InTextReferenceType.NAME_YEAR;
         }
 
         return InTextReferenceType.NUMERIC;
     }
-    
-    private double findMatchLengthsMedian(List<String> matches){
+
+    private double findMatchLengthsMedian(List<String> matches) {
         int[] matchLengths = new int[matches.size()];
-        for (int i=0;i<matches.size();i++) {
-            matchLengths[i] = matches.get(i).length()-2;// don't count the brackets
+        for (int i = 0; i < matches.size(); i++) {
+            matchLengths[i] = matches.get(i).length() - 2;// don't count the brackets
         }
         Arrays.sort(matchLengths);
-        if(matchLengths.length %2 ==0){
-            return ((double)matchLengths[matchLengths.length/2] + 
-                (double)matchLengths[matchLengths.length/2 - 1])/2;
+        if (matchLengths.length % 2 == 0) {
+            return ((double) matchLengths[matchLengths.length / 2]
+                + (double) matchLengths[matchLengths.length / 2 - 1]) / 2;
         }
-        
-        return (double) matchLengths[matchLengths.length/2];
+
+        return (double) matchLengths[matchLengths.length / 2];
     }
 
     private List<String> findAllBracketContents(BracketType bracketType, String allText) {

@@ -43,7 +43,8 @@ public abstract class EndReferenceMatcher {
      * @throws ReferenceTypeException In case the type of the in-text reference is not supported.
      */
     public final Set<BibEntry> match(InTextReference possibleReference) throws ReferenceTypeException {
-        if (possibleReference.getInTextReferenceStyle().getInTextReferenceType() == this.inTextReferenceType) {
+        if (possibleReference.getInTextReferenceStyle().
+            getInTextReferenceType() == this.inTextReferenceType) {
             try {
                 return this.doMatching(possibleReference);
             } catch (ParseException ex) {
@@ -51,7 +52,8 @@ public abstract class EndReferenceMatcher {
             }
         }
 
-        throw new ReferenceTypeException("The reference type of the given reference is not supported by this class.");
+        throw new ReferenceTypeException(
+            "The reference type is not supported by this class.");
     }
 
     /**
@@ -82,7 +84,8 @@ public abstract class EndReferenceMatcher {
                 instance = new NameYearEndReferenceMatcher();
                 break;
             default:
-                throw new ReferenceTypeException("No implementation for the given reference type.");
+                throw new ReferenceTypeException(
+                    "No implementation for the given reference type.");
         }
 
         instance.endReferences = Collections.unmodifiableList(endReferences);
@@ -107,7 +110,8 @@ public abstract class EndReferenceMatcher {
      * @return The content of the brackets of the given reference.
      */
     protected String retrieveReferenceContent(InTextReference possibleReference) {
-        return possibleReference.getParentParagraph().getText().substring(possibleReference.getStartPosition(), possibleReference.getEndPosition());
+        return possibleReference.getParentParagraph().
+            getText().substring(possibleReference.getStartPosition(), possibleReference.getEndPosition());
     }
 
 }
